@@ -4,6 +4,8 @@
 
 int main()
 {
+	////Just a comment to test github 
+	/// Another comment for github
 	
 	Restaurant* pRest = new Restaurant;
 	pRest->RunSimulation();
