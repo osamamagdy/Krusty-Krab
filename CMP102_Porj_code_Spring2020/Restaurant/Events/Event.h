@@ -9,7 +9,8 @@ class Restaurant;	//Forward declation
 class Event
 {
 protected:
-	int EventTime;	//Timestep when this event takes place
+	int EventTime;	//Timestep when this event takes place && we will make a Queue of events according to this
+	
 	int OrderID;	//each event is related to certain order
 public:
 	Event(int eTime, int ordID);
@@ -19,7 +20,7 @@ public:
 
 
 	virtual void Execute(Restaurant* pRest)=0;	////a pointer to "Restaurant" and events need it to execute
-
+	// As the event need to access sum data inside restaurant
 };
 
 

@@ -19,10 +19,19 @@ protected:
 	
 	//
 	// TODO: Add More Data Members As Needed
+
+	int WaitTime;  // The time the order waits before bieng assigned to the cook
+	int OrderSize; // How many Dishes in the order
+	int Priority;  // The Priorits of servicing the order (used only for VIP orders)
 	//
 
 public:
 	Order(int ID, ORD_TYPE r_Type);
+	
+	
+	Order(int ID, ORD_TYPE r_Type, double money, int size, int timestep);
+
+
 	virtual ~Order();
 
 	int GetID();
@@ -37,6 +46,19 @@ public:
 	
 	//
 	// TODO: Add More Member Functions As Needed
+
+	void CalPriority();
+	int getPriority();
+	void SetArr(int timestep);
+	void IncSer();
+	void IncWait();
+	void CalFinish();
+	void SetSize(int size);
+	void AddMoney(double extra);
+	
+	
+	
+	
 	//
 
 };

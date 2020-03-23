@@ -16,7 +16,7 @@ void Restaurant::RunSimulation()
 {
 	pGUI = new GUI;
 	PROG_MODE	mode = pGUI->getGUIMode();
-		
+
 	switch (mode)	//Add a function for each mode in next phases
 	{
 	case MODE_INTR:
@@ -32,7 +32,25 @@ void Restaurant::RunSimulation()
 
 }
 
+void Restaurant::loadfile()
+{
+	int Ncooks, Gcooks, Vcooks, Nspeed, Gspeed, Vspeed, OrdersToBreak, NBreak, Gbreak, Vbreak, AutoP, EventsNum;
+	char EventType;
+	ifstream Input;
+	Input.open("Input.txt");
 
+	Input >> Ncooks >> Gcooks >> Vcooks;
+	Input >> Nspeed >> Gspeed >> Vspeed;
+	Input >> OrdersToBreak >> NBreak >> Gbreak >> Vbreak;
+	Input >> AutoP;
+	Input >> EventsNum;
+
+	for (int i = 1; i <= EventsNum; i++)
+	{
+		Input>>
+	}
+
+}
 
 //////////////////////////////////  Event handling functions   /////////////////////////////
 
