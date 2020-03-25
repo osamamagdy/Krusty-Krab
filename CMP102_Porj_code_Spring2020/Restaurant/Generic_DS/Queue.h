@@ -36,7 +36,7 @@ Single Node Case:
                  frontPtr	 backPtr
 					\		/	
 					 \	   /			
-					-------- 	
+					------	-- 	
 					|	|nxt -->NULL
 					--------	
 
@@ -59,6 +59,7 @@ public :
 	bool peekFront(T& frntEntry)  const;
 	T* toArray(int& count);	//returns array of T (array if items)
 	~Queue();
+	bool SearchQueue(int Time,int  ID, Order* &frntEntry);
 };
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -68,12 +69,68 @@ The constructor of the Queue class.
 
 */
 
+
 template <typename T>
 Queue<T>::Queue()
 {
 	backPtr=nullptr;
 	frontPtr=nullptr;
 
+}
+template <typename T>
+bool Queue<T>::SearchQueue(int Time, int ID, Order* & frntEntry)
+{
+	
+	if (!frontPtr)
+		return false;
+	// if Queue is empty
+	if (frontPtr->getNext() == nullptr)
+	{//if queue has one node
+		if (frontPtr->getItem()->GetID() == ID && frontPtr->getItem()->GetType() == TYPE_NRM)
+		{
+			frntEntry = frontPtr->getItem();
+			frontPtr = nullptr;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+
+	}
+	//if first node;
+	if (frontPtr->getItem()->GetID() == ID)
+	{
+		frntEntry = frontPtr->getItem();
+		frontPtr = frontPtr->getNext();
+		return true;
+	}
+	Node<T>* nptr = frontPtr;
+	Node<T>* prev = nullptr;
+	
+	while (nptr)
+	{
+		if (nptr->getItem()->GetID() == ID && nptr->getItem()->GetType() == TYPE_NRM)
+		{
+			frntEntry = nptr->getItem();
+			prev->setNext(nptr->getNext());
+			if(prev)
+			nptr = prev->getNext();
+			else
+			{
+				nptr = nullptr;
+			}
+			
+			
+			return true;
+		}
+		else
+		{
+			prev = nptr;
+			nptr = nptr->getNext();
+		}
+	}
+	return false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -146,6 +203,7 @@ bool Queue<T>:: dequeue(T& frntEntry)
 	return true;
 
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 

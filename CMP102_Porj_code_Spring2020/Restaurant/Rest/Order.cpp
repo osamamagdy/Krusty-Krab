@@ -7,6 +7,7 @@ Order::Order(int id, ORD_TYPE r_Type)
 	type = r_Type;
 	status = WAIT;
 }
+
 Order::Order(int id, ORD_TYPE r_Type, double money, int size, int timestep)
 {
 	Priority = 0;
@@ -16,6 +17,14 @@ Order::Order(int id, ORD_TYPE r_Type, double money, int size, int timestep)
 	ID = (id > 0 && id < 1000) ? id : 0;	//1<ID<999
 	type = r_Type;
 	status = WAIT;
+}
+void Order::SetType(ORD_TYPE type)
+{
+	this->type = type;
+}
+void Order::increase_promotion()
+{
+	orderpromted++;
 }
 Order::~Order()
 {

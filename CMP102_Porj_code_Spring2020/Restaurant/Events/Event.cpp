@@ -3,8 +3,8 @@
 
 Event::Event(int eTime, int ordID)
 {
-	EventTime = eTime;
-	OrderID	= ordID;
+	EventTime = eTime>0?eTime:0;
+	OrderID	= ordID>0?ordID:0;
 }
 
 

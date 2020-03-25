@@ -3,6 +3,7 @@
 class CancellationEvent : public Event  //class for the cancellation event
 {
 
+	
 public:
 	CancellationEvent(int eTime, int oID);
 
