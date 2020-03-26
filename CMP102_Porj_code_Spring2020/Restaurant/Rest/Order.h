@@ -62,5 +62,5 @@ public:
 	//
 
 };
-int Order::orderpromted = 0;
+
 #endif

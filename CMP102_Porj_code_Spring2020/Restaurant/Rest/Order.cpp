@@ -102,7 +102,7 @@ void Order :: AddMoney(double extra)
 }
 
 
-
+int Order::orderpromted = 0;
 
 
 
