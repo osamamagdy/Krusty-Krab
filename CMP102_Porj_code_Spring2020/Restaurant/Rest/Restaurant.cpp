@@ -224,6 +224,7 @@ void Restaurant::AddOrders(Order* po)
 	}
 	else if (po->GetType() == TYPE_VIP)
 	{
+		po->CalPriority();
 		Vorders.enqueue(po,po->getPriority());
 	}
 
