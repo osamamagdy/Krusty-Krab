@@ -2,7 +2,12 @@
 #define __DEFS_H_
 
 
-
+enum COOK_STATUS
+{
+	AVAILABLE,
+	UNAVILABLE,
+	INJURD
+};
 
 
 enum ORD_TYPE	//types of orders
