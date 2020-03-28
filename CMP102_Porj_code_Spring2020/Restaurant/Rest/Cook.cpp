@@ -33,4 +33,19 @@ void Cook::setType(ORD_TYPE t)
 	type = t;
 }
 
+void Cook::setSpeed(int s)
+{
+	speed = (s >= 0) ? s : 0;
+}
+
+void Cook::setBreakduration(int B)
+{
+	Breakduration = (B >= 0) ? B : 0;
+}
+
+void Cook::setordertobreak(int ordtobreak)
+{
+	OrderstoBreak = ordtobreak;
+}
+
 

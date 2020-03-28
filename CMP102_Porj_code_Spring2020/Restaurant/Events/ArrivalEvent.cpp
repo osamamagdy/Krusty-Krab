@@ -11,10 +11,9 @@ ArrivalEvent::ArrivalEvent(int eTime, int oID, ORD_TYPE oType):Event(eTime, oID)
 
 
 
-ArrivalEvent::ArrivalEvent(int eTime, int oID, ORD_TYPE oType, int distance, double money, int size) :Event(eTime, oID)
+ArrivalEvent::ArrivalEvent(int eTime, int oID, ORD_TYPE oType, double money, int size) :Event(eTime, oID)
 {
 	OrdType = oType;
-	OrdDistance = distance;
 	OrdMoney = money;
 	OrderSize = size;
 }

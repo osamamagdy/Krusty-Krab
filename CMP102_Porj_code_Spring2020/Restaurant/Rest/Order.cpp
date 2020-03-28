@@ -92,6 +92,11 @@ void Order :: AddMoney(double extra)
 	totalMoney = totalMoney + extra;
 }
 
+void Order::setautopormotion(int autop)
+{
+	orderautopormotion = autop;
+}
+
 
 
 

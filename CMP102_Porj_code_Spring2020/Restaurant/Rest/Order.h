@@ -10,7 +10,7 @@ protected:
 	int ID;         //Each order has a unique ID (from 1 --> 999 )
 	ORD_TYPE type;		//order type: Normal, vegan, VIP
 	ORD_STATUS status;	//waiting, in-service, done
-	int Distance;	//The distance (in meters) between the order location and the resturant 
+	static int orderautopormotion;	//this is only for Normal order 
 	                
 	double totalMoney;	//Total order money
 
@@ -55,7 +55,7 @@ public:
 	void CalFinish();
 	void SetSize(int size);
 	void AddMoney(double extra);
-	
+	static void setautopormotion(int autop);
 	
 	
 	
