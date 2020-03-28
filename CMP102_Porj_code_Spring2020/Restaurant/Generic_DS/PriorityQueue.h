@@ -116,7 +116,7 @@ template <typename T>
 bool PQueue<T>::enqueue(const T& newEntry, int currPriority)
 {
 
-	Node<T>* newNodePtr = new Node<T>(newEntry, Priority);
+	Node<T>* newNodePtr = new Node<T>(newEntry, currPriority);
 	// Insert the new node
 	if (isEmpty())
 	{

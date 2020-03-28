@@ -16,7 +16,7 @@ protected:
 
 	int ArrTime, ServTime, FinishTime;	//arrival, service start, and finish times
 	
-	
+	static int orderpromted;
 	//
 	// TODO: Add More Data Members As Needed
 
@@ -30,7 +30,7 @@ public:
 	
 	
 	Order(int ID, ORD_TYPE r_Type, double money, int size, int timestep);
-
+	void increase_promotion();
 
 	virtual ~Order();
 
@@ -56,10 +56,10 @@ public:
 	void SetSize(int size);
 	void AddMoney(double extra);
 	static void setautopormotion(int autop);
+	void SetType(ORD_TYPE type);
 	
 	
 	
-	//
 
 };
 

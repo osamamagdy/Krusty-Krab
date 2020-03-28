@@ -51,10 +51,10 @@ public:
 	
 	void ExecuteEvents(int TimeStep);	//executes all events at current timestep
 	void RunSimulation();
-
+	void AddOrders(Order* po);
 	void loadfile();
 
-
+	void Seacrh(int Time, int ID, Order  *&frntEntry);
 
 	void FillDrawingList();
 

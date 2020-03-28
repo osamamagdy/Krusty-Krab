@@ -49,3 +49,12 @@ void Cook::setordertobreak(int ordtobreak)
 }
 
 
+COOK_STATUS Cook::GetStatus()const
+{
+	return status;
+}
+
+void Cook::setStatus(COOK_STATUS st)
+{
+	status = st;
+}
