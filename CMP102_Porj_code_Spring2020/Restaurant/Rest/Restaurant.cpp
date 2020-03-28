@@ -5,8 +5,10 @@ using namespace std;
 
 #include "Restaurant.h"
 #include "..\Events\ArrivalEvent.h"
-
-
+#include "..\Events\CancellationEvent.h" 
+#include "..\Events\PromotionEvent.h" 
+#include"Cook.h"
+#include "Order.h"
 Restaurant::Restaurant() 
 {
 	pGUI = NULL;
@@ -34,21 +36,108 @@ void Restaurant::RunSimulation()
 
 void Restaurant::loadfile()
 {
-	int Ncooks, Gcooks, Vcooks, Nspeed, Gspeed, Vspeed, OrdersToBreak, NBreak, Gbreak, Vbreak, AutoP, EventsNum;
+	int Ncook, Gcook, Vcook, Nspeed, Gspeed, Vspeed, OrdersToBreak, NBreak, Gbreak, Vbreak, AutoP, EventsNum;
 	char EventType;
+	char OTYP; int TS, ID, SIZE;
+	ORD_TYPE TYP;
+	double MONY;
+	
 	ifstream Input;
 	Input.open("Input.txt");
 
-	Input >> Ncooks >> Gcooks >> Vcooks;
+	Input >> Ncook >> Gcook >> Vcook;
 	Input >> Nspeed >> Gspeed >> Vspeed;
 	Input >> OrdersToBreak >> NBreak >> Gbreak >> Vbreak;
 	Input >> AutoP;
 	Input >> EventsNum;
+	
+	//creating Ncooks
+	Cook* newNcooks = new Cook[Ncook];
+	//creating Gcooks
+	Cook* newGcooks = new Cook[Gcook];
+	//creating Vcooks
+	Cook* newVcook = new Cook[Vcook];
 
-	for (int i = 1; i <= EventsNum; i++)
+	//setting static data type  order to break 
+	Cook::setordertobreak(OrdersToBreak);
+	//setting static data type autopormotion
+	Order::setautopormotion(AutoP);
+	//setting data for normal cooks and enqueue them
+	for (int i = 0; i < Ncook; i++)
 	{
-		Input>>
+		newNcooks[i].setSpeed[Nspeed];
+		newNcooks[i].setType[TYPE_NRM];
+		newNcooks[i].setBreakduration(NBreak);
+		//we should ask for bonous that every cook has different periorty depend on different speed
+		Ncooks.enqueue(&newNcooks[i], Nspeed);
 	}
+	//setting data for vegan cooks and enqueue them
+	for (int i = 0; i < Gcook; i++)
+	{
+		newGcooks[i].setSpeed[Gspeed];
+		newGcooks[i].setType[TYPE_VGAN];
+		newGcooks[i].setBreakduration(Gbreak);
+		//we should ask for bonous that every cook has different periorty depend on different speed
+		Gcooks.enqueue(&newGcooks[i], Gspeed);
+	}
+	//setting data for VIP cooks and enqueue them
+	for (int i = 0; i < Vcook; i++)
+	{
+		newVcook[i].setSpeed[Vspeed];
+		newVcook[i].setType[TYPE_VIP];
+		newVcook[i].setBreakduration(Vbreak);
+		//we should ask for bonous that every cook has different periorty depend on different speed
+		Vcooks.enqueue(&newVcook[i], Vspeed);
+	}
+	//reading events lines and set its data the enqueue them in events queue
+
+	//pointer to base class event 
+	Event* newevent;
+
+	for (int i = 0; i < EventsNum; i++)
+	{
+	   Input >> EventType;
+
+	   switch (EventType)
+	   {
+		   //arrival event
+	   case 'R':
+	   {
+		   Input >> OTYP >> TS >> ID >> SIZE >> MONY;
+		   switch (OTYP)
+		   {
+		   case 'N':
+			   TYP = TYPE_NRM;
+			   break;
+		   case 'G':
+			   TYP = TYPE_VGAN;
+			   break;
+		   case 'V':
+			   TYP = TYPE_VIP;
+			   break;
+		   }
+		   newevent = new ArrivalEvent(TS, ID, TYP, MONY, SIZE);
+		   break;
+	   }
+	   //cancellation event
+	   case 'X':
+	   {
+		   Input >> TS >> ID;
+		   newevent = new CancellationEvent(TS, ID);
+		   break;
+	   }
+	   //Promotion event
+	   case 'P':
+	   {
+		   Input >> TS >> ID >> MONY;
+		   newevent = new PromotionEvent (TS,ID,MONY);
+		   break;
+	   }
+
+	   }
+	   EventsQueue.enqueue(newevent);
+	}
+	Input.close();
 
 }
 
