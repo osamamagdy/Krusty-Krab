@@ -307,15 +307,18 @@ void Restaurant::AddOrders(Order* po)
 	if (po->GetType() == TYPE_NRM)
 	{
 		Norders.enqueue(po);
+		//add order for norma;
 	}
 	else if (po->GetType() == TYPE_VGAN)
 	{
 		Gorders.enqueue(po);
+		//add order for vegan
 	}
 	else if (po->GetType() == TYPE_VIP)
 	{
 		po->CalPriority();
 		Vorders.enqueue(po,po->getPriority());
+		//add order for Vip
 	}
 
 }
@@ -323,13 +326,16 @@ void Restaurant::Seacrh(int Time, int ID,Order *& frntEntry)
 {
 	Queue<Order*> qtemp;
 	Order* Otemp;
+	//search about order
 	while (Norders.dequeue(Otemp))
 	{
 		if (Otemp->GetID() != ID)
 			qtemp.enqueue(Otemp);
 		else
 			frntEntry = Otemp;
+		
 	}
+
 	while (qtemp.dequeue(Otemp))
 		Norders.enqueue(Otemp);
 }

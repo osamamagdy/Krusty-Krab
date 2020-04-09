@@ -16,7 +16,7 @@ void CancellationEvent::Execute(Restaurant* pRest)
 	pRest->Seacrh(EventTime, OrderID,nptr);
 	
 	if (nptr)
-	{
+	{//delete order 
 		delete nptr;
 		nptr = nullptr;
 	}

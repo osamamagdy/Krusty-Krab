@@ -6,7 +6,7 @@
 
 PromotionEvent::PromotionEvent(int eTime, int oID, double extra) :Event(eTime, oID)
 {
-    ExMoney = extra;
+    ExMoney = extra>0?extra:0;
 }
 
 
@@ -20,9 +20,13 @@ void PromotionEvent::Execute(Restaurant* pRest)
     if (nptr)
     {
         nptr->AddMoney(ExMoney);
+        //increase money
         nptr->SetType(TYPE_VIP);
+        //change the type
+        if(ExMoney==0) //auto promtion
         nptr->increase_promotion();
         pRest->AddOrders(nptr);
+        //add to VIP orders
     }
   // First check that the order type through the passed ID if it is not Normal
   // If it is normal , search for it in the waiting orders only using the passed ID
