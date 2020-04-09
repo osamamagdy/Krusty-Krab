@@ -321,6 +321,16 @@ void Restaurant::AddOrders(Order* po)
 }
 void Restaurant::Seacrh(int Time, int ID,Order *& frntEntry)
 {
-	Norders.SearchQueue(Time, ID, frntEntry);
+	Queue<Order*> qtemp;
+	Order* Otemp;
+	while (Norders.dequeue(Otemp))
+	{
+		if (Otemp->GetID() != ID)
+			qtemp.enqueue(Otemp);
+		else
+			frntEntry = Otemp;
+	}
+	while (qtemp.dequeue(Otemp))
+		Norders.enqueue(Otemp);
 }
 
