@@ -1,6 +1,6 @@
 #include "Cook.h"
 
-
+int Cook::OrderstoBreak = 0;
 Cook::Cook()
 {
 }

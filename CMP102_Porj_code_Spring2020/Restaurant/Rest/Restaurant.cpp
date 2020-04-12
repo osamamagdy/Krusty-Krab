@@ -65,8 +65,8 @@ void Restaurant::loadfile()
 	//setting data for normal cooks and enqueue them
 	for (int i = 0; i < Ncook; i++)
 	{
-		newNcooks[i].setSpeed[Nspeed];
-		newNcooks[i].setType[TYPE_NRM];
+		newNcooks[i].setSpeed(Nspeed);
+		newNcooks[i].setType(TYPE_NRM);
 		newNcooks[i].setBreakduration(NBreak);
 		//we should ask for bonous that every cook has different periorty depend on different speed
 		Ncooks.enqueue(&newNcooks[i], Nspeed);
@@ -74,8 +74,8 @@ void Restaurant::loadfile()
 	//setting data for vegan cooks and enqueue them
 	for (int i = 0; i < Gcook; i++)
 	{
-		newGcooks[i].setSpeed[Gspeed];
-		newGcooks[i].setType[TYPE_VGAN];
+		newGcooks[i].setSpeed(Gspeed);
+		newGcooks[i].setType(TYPE_VGAN);
 		newGcooks[i].setBreakduration(Gbreak);
 		//we should ask for bonous that every cook has different periorty depend on different speed
 		Gcooks.enqueue(&newGcooks[i], Gspeed);
@@ -83,8 +83,8 @@ void Restaurant::loadfile()
 	//setting data for VIP cooks and enqueue them
 	for (int i = 0; i < Vcook; i++)
 	{
-		newVcook[i].setSpeed[Vspeed];
-		newVcook[i].setType[TYPE_VIP];
+		newVcook[i].setSpeed(Vspeed);
+		newVcook[i].setType(TYPE_VIP);
 		newVcook[i].setBreakduration(Vbreak);
 		//we should ask for bonous that every cook has different periorty depend on different speed
 		Vcooks.enqueue(&newVcook[i], Vspeed);
