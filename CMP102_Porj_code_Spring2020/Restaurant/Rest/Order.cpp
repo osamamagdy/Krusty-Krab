@@ -101,7 +101,7 @@ void Order :: AddMoney(double extra)
 
 void Order::setautopormotion(int autop)
 {
-	orderautopormotion = autop;
+	orderpromted = autop;
 }
 
 
