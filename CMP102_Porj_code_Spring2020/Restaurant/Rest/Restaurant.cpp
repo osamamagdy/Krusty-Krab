@@ -175,7 +175,6 @@ void Restaurant::FillDrawingList()
 	//It should add ALL orders and Cooks to the drawing list
 	Order* orderptr;
 	Cook* cookptr;
-	GUI * ptr=new GUI;
 	//orders copy 
 	PQueue<Order*> Vorderscopy;	
     Queue<Order*> Norderscopy;  
@@ -187,19 +186,19 @@ void Restaurant::FillDrawingList()
 	//Drawing orders using add to drawing list and copy it 
 	while (Vorders.dequeue(orderptr))
 	{
-		ptr->AddToDrawingList(orderptr);
+		pGUI->AddToDrawingList(orderptr);
 		Vorderscopy.enqueue(orderptr, orderptr->getPriority());
 
 	}
 	while (Norders.dequeue(orderptr))
 	{
-		ptr->AddToDrawingList(orderptr);
+		pGUI->AddToDrawingList(orderptr);
 		Norderscopy.enqueue(orderptr);
 
 	}
 	while (Gorders.dequeue(orderptr))
 	{
-		ptr->AddToDrawingList(orderptr);
+		pGUI->AddToDrawingList(orderptr);
 		Gorderscopy.enqueue(orderptr);
 
 	}
@@ -219,17 +218,17 @@ void Restaurant::FillDrawingList()
 	//Drawing cooks using add to drawing list and copy it 
 	while (Vcooks.dequeue(cookptr))
 	{
-		ptr->AddToDrawingList(cookptr);
+		pGUI->AddToDrawingList(cookptr);
 		Vcookscopy.enqueue(cookptr, cookptr->getspeed());
 	}
 	while (Ncooks.dequeue(cookptr))
 	{
-		ptr->AddToDrawingList(cookptr);
+		pGUI->AddToDrawingList(cookptr);
 		Ncookscopy.enqueue(cookptr, cookptr->getspeed());
 	}
 	while (Gcooks.dequeue(cookptr))
 	{
-		ptr->AddToDrawingList(cookptr);
+		pGUI->AddToDrawingList(cookptr);
 		Gcookscopy.enqueue(cookptr, cookptr->getspeed());
 	}
 	//filling cooks with copied data 
