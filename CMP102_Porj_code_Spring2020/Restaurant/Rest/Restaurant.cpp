@@ -30,7 +30,9 @@ void Restaurant::RunSimulation()
 	case MODE_DEMO:
 		//Just_A_Demo();
 		loadfile();
-		ExecuteEvents(7);
+		ExecuteEvents(30);
+		FillDrawingList();
+	
 
 	};
 
@@ -244,10 +246,9 @@ void Restaurant::FillDrawingList()
 	{
 		Gcooks.enqueue(cookptr, cookptr->getspeed());
 	}
-	//It should get orders from orders lists/queues/stacks/whatever (same for Cooks)
-	//To add orders it should call function  void GUI::AddToDrawingList(Order* pOrd);
-	//To add Cooks it should call function  void GUI::AddToDrawingList(Cook* pCc);
-
+	//update interface 
+	pGUI->UpdateInterface();
+	pGUI->ResetDrawingList();
 }
 
 
