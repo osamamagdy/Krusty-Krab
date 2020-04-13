@@ -26,7 +26,15 @@ void Order::SetType(ORD_TYPE type)
 }
 void Order::increase_promotion()
 {
-	orderpromted++;
+	orderautopormotion++;
+}
+int Order::GetAUto()
+{
+	return orderpromted;
+}
+int Order::GetIncrese()
+{
+	return orderautopormotion;
 }
 Order::~Order()
 {

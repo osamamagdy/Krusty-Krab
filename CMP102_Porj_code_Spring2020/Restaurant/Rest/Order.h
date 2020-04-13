@@ -31,7 +31,8 @@ public:
 	
 	Order(int ID, ORD_TYPE r_Type, double money, int size, int timestep);
 	void increase_promotion();
-
+	int GetAUto();
+	int GetIncrese();
 	virtual ~Order();
 
 	int GetID();

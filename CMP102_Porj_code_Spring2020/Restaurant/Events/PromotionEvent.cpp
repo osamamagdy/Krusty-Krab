@@ -23,9 +23,20 @@ void PromotionEvent::Execute(Restaurant* pRest)
         //increase money
         nptr->SetType(TYPE_VIP);
         //change the type
-        if(ExMoney==0) //auto promtion
-        nptr->increase_promotion();
-        pRest->AddOrders(nptr);
+        if (ExMoney == 0 && nptr->GetAUto() > nptr->GetIncrese()) //auto promtion
+        {
+            nptr->increase_promotion();
+            pRest->AddOrders(nptr);
+        }
+        else if (ExMoney > 0)
+        {
+            pRest->AddOrders(nptr);
+        }
+        else
+        {
+            delete nptr;
+            nptr = NULL;
+        }
         //add to VIP orders
     }
   // First check that the order type through the passed ID if it is not Normal
