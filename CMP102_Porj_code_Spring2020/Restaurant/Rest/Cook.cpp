@@ -58,3 +58,8 @@ void Cook::setStatus(COOK_STATUS st)
 {
 	status = st;
 }
+
+int Cook::getspeed()
+{
+	return speed;
+}

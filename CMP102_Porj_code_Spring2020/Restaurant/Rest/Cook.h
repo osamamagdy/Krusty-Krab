@@ -26,4 +26,5 @@ public:
 	void setID(int ID);
 	void setType(ORD_TYPE type) ;
 	void setStatus(COOK_STATUS st);
+	int getspeed();
 };

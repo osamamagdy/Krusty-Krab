@@ -173,6 +173,78 @@ void Restaurant::FillDrawingList()
 {
 	//This function should be implemented in phase1
 	//It should add ALL orders and Cooks to the drawing list
+	Order* orderptr;
+	Cook* cookptr;
+	GUI * ptr=new GUI;
+	//orders copy 
+	PQueue<Order*> Vorderscopy;	
+    Queue<Order*> Norderscopy;  
+	Queue<Order*> Gorderscopy;
+	//cooks copy
+	PQueue<Cook*> Vcookscopy;   
+	PQueue<Cook*> Ncookscopy;   
+	PQueue<Cook*> Gcookscopy;  
+	//Drawing orders using add to drawing list and copy it 
+	while (Vorders.dequeue(orderptr))
+	{
+		ptr->AddToDrawingList(orderptr);
+		Vorderscopy.enqueue(orderptr, orderptr->getPriority());
+
+	}
+	while (Norders.dequeue(orderptr))
+	{
+		ptr->AddToDrawingList(orderptr);
+		Norderscopy.enqueue(orderptr);
+
+	}
+	while (Gorders.dequeue(orderptr))
+	{
+		ptr->AddToDrawingList(orderptr);
+		Gorderscopy.enqueue(orderptr);
+
+	}
+	//filling orders with copied data 
+	while (Vorderscopy.dequeue(orderptr))
+	{
+		Vorders.enqueue(orderptr, orderptr->getPriority());
+	}
+	while (Norderscopy.dequeue(orderptr))
+	{
+		Norders.enqueue(orderptr);
+	}
+	while (Gorderscopy.dequeue(orderptr))
+	{
+		Gorders.enqueue(orderptr);
+	}
+	//Drawing cooks using add to drawing list and copy it 
+	while (Vcooks.dequeue(cookptr))
+	{
+		ptr->AddToDrawingList(cookptr);
+		Vcookscopy.enqueue(cookptr, cookptr->getspeed());
+	}
+	while (Ncooks.dequeue(cookptr))
+	{
+		ptr->AddToDrawingList(cookptr);
+		Ncookscopy.enqueue(cookptr, cookptr->getspeed());
+	}
+	while (Gcooks.dequeue(cookptr))
+	{
+		ptr->AddToDrawingList(cookptr);
+		Gcookscopy.enqueue(cookptr, cookptr->getspeed());
+	}
+	//filling cooks with copied data 
+	while (Vcookscopy.dequeue(cookptr))
+	{
+		Vcooks.enqueue(cookptr, cookptr->getspeed());
+	}
+	while (Ncookscopy.dequeue(cookptr))
+	{
+		Ncooks.enqueue(cookptr, cookptr->getspeed());
+	}
+	while (Gcookscopy.dequeue(cookptr))
+	{
+		Gcooks.enqueue(cookptr, cookptr->getspeed());
+	}
 	//It should get orders from orders lists/queues/stacks/whatever (same for Cooks)
 	//To add orders it should call function  void GUI::AddToDrawingList(Order* pOrd);
 	//To add Cooks it should call function  void GUI::AddToDrawingList(Cook* pCc);
