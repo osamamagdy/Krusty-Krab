@@ -72,6 +72,7 @@ void Restaurant::loadfile()
 		newNcooks[i].setSpeed(Nspeed);
 		newNcooks[i].setType(TYPE_NRM);
 		newNcooks[i].setBreakduration(NBreak);
+		newNcooks[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
 		Ncooks.enqueue(&newNcooks[i], Nspeed);
 	}
@@ -81,6 +82,7 @@ void Restaurant::loadfile()
 		newGcooks[i].setSpeed(Gspeed);
 		newGcooks[i].setType(TYPE_VGAN);
 		newGcooks[i].setBreakduration(Gbreak);
+		newGcooks[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
 		Gcooks.enqueue(&newGcooks[i], Gspeed);
 	}
@@ -90,6 +92,7 @@ void Restaurant::loadfile()
 		newVcook[i].setSpeed(Vspeed);
 		newVcook[i].setType(TYPE_VIP);
 		newVcook[i].setBreakduration(Vbreak);
+		newVcook[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
 		Vcooks.enqueue(&newVcook[i], Vspeed);
 	}
