@@ -60,7 +60,7 @@ void Restaurant::loadfile()
 	//creating Vcooks
 	Cook* newVcook = new Cook[Vcook];
 
-	//setting static data type  order to break 
+	//setting static data type order to break 
 	Cook::setordertobreak(OrdersToBreak);
 	//setting static data type autopormotion
 	Order::setautopormotion(AutoP);
