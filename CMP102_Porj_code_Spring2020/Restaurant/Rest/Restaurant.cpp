@@ -28,7 +28,9 @@ void Restaurant::RunSimulation()
 	case MODE_SLNT:
 		break;
 	case MODE_DEMO:
-		Just_A_Demo();
+		//Just_A_Demo();
+		loadfile();
+		ExecuteEvents(7);
 
 	};
 
