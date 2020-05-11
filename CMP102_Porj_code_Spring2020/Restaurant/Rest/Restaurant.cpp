@@ -69,6 +69,7 @@ void Restaurant::loadfile()
 	Cook::setordertobreak(OrdersToBreak);
 	//setting static data type autopormotion
 	Order::setautopormotion(AutoP);
+	//Order::SetVIP_WT(VIP_WT);
 	//setting data for normal cooks and enqueue them
 	for (int i = 0; i < Ncook; i++)
 	{
@@ -138,7 +139,7 @@ void Restaurant::loadfile()
 			   TYP = TYPE_VIP;
 			   break;
 		   }
-		   newevent = new ArrivalEvent(TS, ID, TYP, MONY, SIZE, VIP_WT);
+		   newevent = new ArrivalEvent(TS, ID, TYP, MONY, SIZE);
 		   break;
 	   }
 	   //cancellation event
