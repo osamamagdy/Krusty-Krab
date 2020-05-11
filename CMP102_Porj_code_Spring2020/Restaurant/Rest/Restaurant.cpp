@@ -40,20 +40,23 @@ void Restaurant::RunSimulation()
 
 void Restaurant::loadfile()
 {
-	int Ncook, Gcook, Vcook, Nspeed, Gspeed, Vspeed, OrdersToBreak, NBreak, Gbreak, Vbreak, AutoP, EventsNum;
+	int Ncook, Gcook, Vcook, NspeedMin, NspeedMax,GspeedMin, GspeedMax, VspeedMin, VspeedMax, OrdersToBreak, NBreakMin,NBreakMax, GbreakMin,GbreakMax, VbreakMin, VbreakMax,AutoP, EventsNum;
 	char EventType;
 	char OTYP; int TS, ID, SIZE;
 	ORD_TYPE TYP;
 	double MONY;
-	
+	int  RstPrd, VIP_WT;
+	float InjProp ;
 	ifstream Input;
 	Input.open("Input.txt");
 
 	Input >> Ncook >> Gcook >> Vcook;
-	Input >> Nspeed >> Gspeed >> Vspeed;
-	Input >> OrdersToBreak >> NBreak >> Gbreak >> Vbreak;
-	Input >> AutoP;
+	Input >> NspeedMin >> NspeedMax >> GspeedMin >> GspeedMax >> VspeedMin >> VspeedMax;
+	Input >> OrdersToBreak >> NBreakMin >> NBreakMax >> GbreakMin>> GbreakMax >>VbreakMin>> VbreakMax;
+	Input >> InjProp >> RstPrd;
+	Input >> AutoP >> VIP_WT;
 	Input >> EventsNum;
+
 	
 	//creating Ncooks
 	Cook* newNcooks = new Cook[Ncook];
@@ -69,32 +72,44 @@ void Restaurant::loadfile()
 	//setting data for normal cooks and enqueue them
 	for (int i = 0; i < Ncook; i++)
 	{
-		newNcooks[i].setSpeed(Nspeed);
+		newNcooks[i].setMinSpeed(NspeedMin);
+		newNcooks[i].SetRstPrd(RstPrd);
+		newNcooks[i].SetInjProp(InjProp);
+		newNcooks[i].setMaxSpeed(NspeedMax);
 		newNcooks[i].setType(TYPE_NRM);
-		newNcooks[i].setBreakduration(NBreak);
+		newNcooks[i].setMinBreakduration(NBreakMin);
+		newNcooks[i].setMaxBreakduration(NBreakMax);
 		newNcooks[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
-		Ncooks.enqueue(&newNcooks[i], Nspeed);
+		Ncooks.enqueue(&newNcooks[i], NspeedMax);
 	}
 	//setting data for vegan cooks and enqueue them
 	for (int i = 0; i < Gcook; i++)
 	{
-		newGcooks[i].setSpeed(Gspeed);
+		newGcooks[i].setMinSpeed(GspeedMin);
+		newGcooks[i].SetRstPrd(RstPrd);
+		newGcooks[i].SetInjProp(InjProp);
+		newGcooks[i].setMaxSpeed(GspeedMax);
 		newGcooks[i].setType(TYPE_VGAN);
-		newGcooks[i].setBreakduration(Gbreak);
+		newGcooks[i].setMinBreakduration(GbreakMin);
+		newGcooks[i].setMaxBreakduration(GbreakMax);
 		newGcooks[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
-		Gcooks.enqueue(&newGcooks[i], Gspeed);
+		Gcooks.enqueue(&newGcooks[i], GspeedMax);
 	}
 	//setting data for VIP cooks and enqueue them
 	for (int i = 0; i < Vcook; i++)
 	{
-		newVcook[i].setSpeed(Vspeed);
+		newVcook[i].setMinSpeed(VspeedMin);
+		newVcook[i].setMaxSpeed(VspeedMax);
+		newVcook[i].SetRstPrd(RstPrd);
+		newVcook[i].SetInjProp(InjProp);
 		newVcook[i].setType(TYPE_VIP);
-		newVcook[i].setBreakduration(Vbreak);
+		newVcook[i].setMinBreakduration(VbreakMin);
+		newVcook[i].setMaxBreakduration(VbreakMax);
 		newVcook[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
-		Vcooks.enqueue(&newVcook[i], Vspeed);
+		Vcooks.enqueue(&newVcook[i], VspeedMax);
 	}
 	//reading events lines and set its data the enqueue them in events queue
 
@@ -123,7 +138,7 @@ void Restaurant::loadfile()
 			   TYP = TYPE_VIP;
 			   break;
 		   }
-		   newevent = new ArrivalEvent(TS, ID, TYP, MONY, SIZE);
+		   newevent = new ArrivalEvent(TS, ID, TYP, MONY, SIZE, VIP_WT);
 		   break;
 	   }
 	   //cancellation event
@@ -224,30 +239,30 @@ void Restaurant::FillDrawingList()
 	while (Vcooks.dequeue(cookptr))
 	{
 		pGUI->AddToDrawingList(cookptr);
-		Vcookscopy.enqueue(cookptr, cookptr->getspeed());
+		Vcookscopy.enqueue(cookptr, cookptr->getMaxspeed());
 	}
 	while (Ncooks.dequeue(cookptr))
 	{
 		pGUI->AddToDrawingList(cookptr);
-		Ncookscopy.enqueue(cookptr, cookptr->getspeed());
+		Ncookscopy.enqueue(cookptr, cookptr->getMaxspeed());
 	}
 	while (Gcooks.dequeue(cookptr))
 	{
 		pGUI->AddToDrawingList(cookptr);
-		Gcookscopy.enqueue(cookptr, cookptr->getspeed());
+		Gcookscopy.enqueue(cookptr, cookptr->getMaxspeed());
 	}
 	//filling cooks with copied data 
 	while (Vcookscopy.dequeue(cookptr))
 	{
-		Vcooks.enqueue(cookptr, cookptr->getspeed());
+		Vcooks.enqueue(cookptr, cookptr->getMaxspeed());
 	}
 	while (Ncookscopy.dequeue(cookptr))
 	{
-		Ncooks.enqueue(cookptr, cookptr->getspeed());
+		Ncooks.enqueue(cookptr, cookptr->getMaxspeed());
 	}
 	while (Gcookscopy.dequeue(cookptr))
 	{
-		Gcooks.enqueue(cookptr, cookptr->getspeed());
+		Gcooks.enqueue(cookptr, cookptr->getMaxspeed());
 	}
 	//update interface 
 	pGUI->UpdateInterface();

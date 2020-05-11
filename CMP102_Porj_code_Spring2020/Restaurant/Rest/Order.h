@@ -15,7 +15,7 @@ protected:
 	double totalMoney;	//Total order money
 
 	int ArrTime, ServTime, FinishTime;	//arrival, service start, and finish times
-	
+	int VIP_WT;
 	static int orderpromted;
 	//
 	// TODO: Add More Data Members As Needed
@@ -29,7 +29,7 @@ public:
 	Order(int ID, ORD_TYPE r_Type);
 	
 	
-	Order(int ID, ORD_TYPE r_Type, double money, int size, int timestep);
+	Order(int ID, ORD_TYPE r_Type, double money, int size, int timestep,int Vipwait);
 	void increase_promotion();
 	int GetAUto();
 	int GetIncrese();
@@ -42,6 +42,7 @@ public:
 	void setStatus(ORD_STATUS s);
 	ORD_STATUS getStatus() const;
 	
+	int getVIP_WT();
 	//
 	// TODO: Add More Member Functions As Needed
 

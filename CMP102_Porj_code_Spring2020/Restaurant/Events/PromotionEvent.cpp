@@ -23,7 +23,7 @@ void PromotionEvent::Execute(Restaurant* pRest)
         //increase money
         nptr->SetType(TYPE_VIP);
         //change the type
-        if (ExMoney == 0 && nptr->GetAUto() > nptr->GetIncrese()) //auto promtion
+        if (ExMoney == 0) //auto promtion
         {
             nptr->increase_promotion();
             pRest->AddOrders(nptr);

@@ -10,7 +10,7 @@ Order::Order(int id, ORD_TYPE r_Type)
 	status = WAIT;
 }
 
-Order::Order(int id, ORD_TYPE r_Type, double money, int size, int timestep)
+Order::Order(int id, ORD_TYPE r_Type, double money, int size, int timestep,int VIpwait)
 {
 	Priority = 0;
 	totalMoney = money;
@@ -19,6 +19,10 @@ Order::Order(int id, ORD_TYPE r_Type, double money, int size, int timestep)
 	ID = (id > 0 && id < 1000) ? id : 0;	//1<ID<999
 	type = r_Type;
 	status = WAIT;
+	if (type == TYPE_VIP)
+	{
+		VIP_WT = VIpwait > 0 ? VIpwait : 0;
+	}
 }
 void Order::SetType(ORD_TYPE type)
 {

@@ -33,16 +33,31 @@ void Cook::setType(ORD_TYPE t)
 	type = t;
 }
 
-void Cook::setSpeed(int s)
+void Cook::setMinSpeed(int s)
 {
-	speed = (s >= 0) ? s : 0;
+	Minspeed = (s >= 0) ? s : 0;
+}
+void Cook::setMaxSpeed(int s)
+{
+	Maxspeed = (s >= 0) ? s : 0;
 }
 
-void Cook::setBreakduration(int B)
+void Cook::setMinBreakduration(int B)
 {
-	Breakduration = (B >= 0) ? B : 0;
+	BreakdurationMin = (B >= 0) ? B : 0;
 }
-
+void Cook::setMaxBreakduration(int B)
+{
+	BreakdurationMax = (B >= 0) ? B : 0;
+}
+int Cook::getMinBreakduration()
+{
+	return BreakdurationMin;
+}
+int Cook::getMaxBreakduration()
+{
+	return BreakdurationMax;
+}
 void Cook::setordertobreak(int ordtobreak)
 {
 	OrderstoBreak = ordtobreak;
@@ -59,7 +74,28 @@ void Cook::setStatus(COOK_STATUS st)
 	status = st;
 }
 
-int Cook::getspeed()
+int Cook::getMinspeed()
 {
-	return speed;
+	return Minspeed;
+}
+int Cook::getMaxspeed()
+{
+	return Maxspeed;
+}
+
+void Cook::SetRstPrd(int s)
+{
+	RstPrd = s > 0 ? s : 0;
+}
+int Cook::getRstPrd()
+{
+	return RstPrd;
+}
+void  Cook::SetInjProp(float i)
+{
+	InjProp = i > 0 ? i : 0;
+}
+float Cook::getInjProp()
+{
+	return InjProp;
 }
