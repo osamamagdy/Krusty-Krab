@@ -1,8 +1,11 @@
 #include "Cook.h"
 
 int Cook::OrderstoBreak = 0;
+float Cook::InjProp = 0;
+int Cook::RstPrd = 0;
 Cook::Cook()
 {
+	N_orders_Finished = 0;
 }
 
 
@@ -22,7 +25,10 @@ ORD_TYPE Cook::GetType() const
 	return type;
 }
 
-
+int  Cook::GetN_orderFinshed()
+{
+	return N_orders_Finished;
+}
 void Cook::setID(int id)
 {
 	ID = id;
@@ -38,22 +44,16 @@ void Cook::setSpeed(int s)
 	speed = (s >= 0) ? s : 0;
 }
 
-void Cook::setMinBreakduration(int B)
+void Cook::setBreakduration(int B)
 {
-	BreakdurationMin = (B >= 0) ? B : 0;
+	Breakduration = (B >= 0) ? B : 0;
 }
-void Cook::setMaxBreakduration(int B)
+
+int Cook::getBreakduration()
 {
-	BreakdurationMax = (B >= 0) ? B : 0;
+	return Breakduration;
 }
-int Cook::getMinBreakduration()
-{
-	return BreakdurationMin;
-}
-int Cook::getMaxBreakduration()
-{
-	return BreakdurationMax;
-}
+
 void Cook::setordertobreak(int ordtobreak)
 {
 	OrderstoBreak = ordtobreak;
@@ -90,4 +90,23 @@ void  Cook::SetInjProp(float i)
 float Cook::getInjProp()
 {
 	return InjProp;
+}
+void Cook::CalUnavailabalePriority(int RealTimestep)
+{
+	Unavailabalepriority = Timesteptobeavailabale+(N_orders_Finished/OrderstoBreak)*Breakduration+(status/InjProp)*(RealTimestep -Timesteptobeavailabale);
+}
+
+int Cook::getUnavailabalePriority()
+{
+	return Unavailabalepriority;
+}
+void Cook::CalavailabalePriority()
+{
+	availabalepriority=speed + ID + type +  Breakduration+ 1 / (status + 1);
+}
+
+
+int Cook::getavailabalePriority()
+{
+	return availabalepriority;
 }

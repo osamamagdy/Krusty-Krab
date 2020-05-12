@@ -42,8 +42,10 @@ private:   // We should give here every data member used in the project, remembe
 	PQueue<Cook*> Ncooks;   //Priority Queue for all normal cooks
 
 	PQueue<Cook*> Gcooks;   //Priority Queue for all vegan cooks
+
+	PQueue<Cook*>UnavailabaleCooks; // for unavailble cooks
 	
-	
+	PQueue<Cook*>InjuredCooks;
 public:
 	
 	Restaurant();

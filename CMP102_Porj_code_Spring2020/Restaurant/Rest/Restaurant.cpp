@@ -70,44 +70,45 @@ void Restaurant::loadfile()
 	//setting static data type autopormotion
 	Order::setautopormotion(AutoP);
 	Order::SetVIP_WT(VIP_WT);
+	//setting static
+	Cook::SetRstPrd(RstPrd);
+	//setting static
+	Cook::SetInjProp(InjProp);
 	//setting data for normal cooks and enqueue them
 	for (int i = 0; i < Ncook; i++)
 	{
 		newNcooks[i].setSpeed(NspeedMin +rand()%NspeedMax);
-		newNcooks[i].SetRstPrd(RstPrd);
-		newNcooks[i].SetInjProp(InjProp);
+		
 		newNcooks[i].setType(TYPE_NRM);
-		newNcooks[i].setMinBreakduration(NBreakMin);
-		newNcooks[i].setMaxBreakduration(NBreakMax);
+		newNcooks[i].setBreakduration(NBreakMin+rand()%NBreakMin);
+		
 		newNcooks[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
-		Ncooks.enqueue(&newNcooks[i], NspeedMax);
+		Ncooks.enqueue(&newNcooks[i], newNcooks[i].getspeed());
 	}
 	//setting data for vegan cooks and enqueue them
 	for (int i = 0; i < Gcook; i++)
 	{
 		newGcooks[i].setSpeed(GspeedMin +rand()%GspeedMax);
-		newGcooks[i].SetRstPrd(RstPrd);
-		newGcooks[i].SetInjProp(InjProp);
+	
 		newGcooks[i].setType(TYPE_VGAN);
-		newGcooks[i].setMinBreakduration(GbreakMin);
-		newGcooks[i].setMaxBreakduration(GbreakMax);
+		newGcooks[i].setBreakduration(GbreakMin+rand()%GbreakMax);
+		
 		newGcooks[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
-		Gcooks.enqueue(&newGcooks[i], GspeedMax);
+		Gcooks.enqueue(&newGcooks[i],newGcooks[i].getspeed());
 	}
 	//setting data for VIP cooks and enqueue them
 	for (int i = 0; i < Vcook; i++)
 	{
 		newVcook[i].setSpeed(VspeedMin +rand()%VspeedMax);
-		newVcook[i].SetRstPrd(RstPrd);
-		newVcook[i].SetInjProp(InjProp);
+	
 		newVcook[i].setType(TYPE_VIP);
-		newVcook[i].setMinBreakduration(VbreakMin);
-		newVcook[i].setMaxBreakduration(VbreakMax);
+		newVcook[i].setBreakduration(VbreakMin+ rand()%VbreakMax);
+		
 		newVcook[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
-		Vcooks.enqueue(&newVcook[i], VspeedMax);
+		Vcooks.enqueue(&newVcook[i], newVcook[i].getspeed());
 	}
 	//reading events lines and set its data the enqueue them in events queue
 
