@@ -33,13 +33,9 @@ void Cook::setType(ORD_TYPE t)
 	type = t;
 }
 
-void Cook::setMinSpeed(int s)
+void Cook::setSpeed(int s)
 {
-	Minspeed = (s >= 0) ? s : 0;
-}
-void Cook::setMaxSpeed(int s)
-{
-	Maxspeed = (s >= 0) ? s : 0;
+	speed = (s >= 0) ? s : 0;
 }
 
 void Cook::setMinBreakduration(int B)
@@ -74,13 +70,9 @@ void Cook::setStatus(COOK_STATUS st)
 	status = st;
 }
 
-int Cook::getMinspeed()
+int Cook::getspeed()
 {
-	return Minspeed;
-}
-int Cook::getMaxspeed()
-{
-	return Maxspeed;
+	return speed;
 }
 
 void Cook::SetRstPrd(int s)

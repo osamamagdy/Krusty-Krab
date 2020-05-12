@@ -114,5 +114,6 @@ int Order::getVIP_WT()
 	return VIP_WT;
 }
 int Order::orderpromted = 0;
+int Order::VIP_WT = 0;
 
 

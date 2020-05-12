@@ -15,7 +15,7 @@ protected:
 	double totalMoney;	//Total order money
 
 	int ArrTime, ServTime, FinishTime;	//arrival, service start, and finish times
-	 int VIP_WT;
+	static int VIP_WT;
 	static int orderpromted;
 	//
 	// TODO: Add More Data Members As Needed
@@ -41,8 +41,8 @@ public:
 
 	void setStatus(ORD_STATUS s);
 	ORD_STATUS getStatus() const;
-	void SetVIP_WT(int vip);
-	int getVIP_WT();
+	static void SetVIP_WT(int vip);
+	static int getVIP_WT();
 	//
 	// TODO: Add More Member Functions As Needed
 

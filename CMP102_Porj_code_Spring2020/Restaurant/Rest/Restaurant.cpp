@@ -69,14 +69,13 @@ void Restaurant::loadfile()
 	Cook::setordertobreak(OrdersToBreak);
 	//setting static data type autopormotion
 	Order::setautopormotion(AutoP);
-	//Order::SetVIP_WT(VIP_WT);
+	Order::SetVIP_WT(VIP_WT);
 	//setting data for normal cooks and enqueue them
 	for (int i = 0; i < Ncook; i++)
 	{
-		newNcooks[i].setMinSpeed(NspeedMin);
+		newNcooks[i].setSpeed(NspeedMin +rand()%NspeedMax);
 		newNcooks[i].SetRstPrd(RstPrd);
 		newNcooks[i].SetInjProp(InjProp);
-		newNcooks[i].setMaxSpeed(NspeedMax);
 		newNcooks[i].setType(TYPE_NRM);
 		newNcooks[i].setMinBreakduration(NBreakMin);
 		newNcooks[i].setMaxBreakduration(NBreakMax);
@@ -87,10 +86,9 @@ void Restaurant::loadfile()
 	//setting data for vegan cooks and enqueue them
 	for (int i = 0; i < Gcook; i++)
 	{
-		newGcooks[i].setMinSpeed(GspeedMin);
+		newGcooks[i].setSpeed(GspeedMin +rand()%GspeedMax);
 		newGcooks[i].SetRstPrd(RstPrd);
 		newGcooks[i].SetInjProp(InjProp);
-		newGcooks[i].setMaxSpeed(GspeedMax);
 		newGcooks[i].setType(TYPE_VGAN);
 		newGcooks[i].setMinBreakduration(GbreakMin);
 		newGcooks[i].setMaxBreakduration(GbreakMax);
@@ -101,8 +99,7 @@ void Restaurant::loadfile()
 	//setting data for VIP cooks and enqueue them
 	for (int i = 0; i < Vcook; i++)
 	{
-		newVcook[i].setMinSpeed(VspeedMin);
-		newVcook[i].setMaxSpeed(VspeedMax);
+		newVcook[i].setSpeed(VspeedMin +rand()%VspeedMax);
 		newVcook[i].SetRstPrd(RstPrd);
 		newVcook[i].SetInjProp(InjProp);
 		newVcook[i].setType(TYPE_VIP);
@@ -240,30 +237,30 @@ void Restaurant::FillDrawingList()
 	while (Vcooks.dequeue(cookptr))
 	{
 		pGUI->AddToDrawingList(cookptr);
-		Vcookscopy.enqueue(cookptr, cookptr->getMaxspeed());
+		Vcookscopy.enqueue(cookptr, cookptr->getspeed());
 	}
 	while (Ncooks.dequeue(cookptr))
 	{
 		pGUI->AddToDrawingList(cookptr);
-		Ncookscopy.enqueue(cookptr, cookptr->getMaxspeed());
+		Ncookscopy.enqueue(cookptr, cookptr->getspeed());
 	}
 	while (Gcooks.dequeue(cookptr))
 	{
 		pGUI->AddToDrawingList(cookptr);
-		Gcookscopy.enqueue(cookptr, cookptr->getMaxspeed());
+		Gcookscopy.enqueue(cookptr, cookptr->getspeed());
 	}
 	//filling cooks with copied data 
 	while (Vcookscopy.dequeue(cookptr))
 	{
-		Vcooks.enqueue(cookptr, cookptr->getMaxspeed());
+		Vcooks.enqueue(cookptr, cookptr->getspeed());
 	}
 	while (Ncookscopy.dequeue(cookptr))
 	{
-		Ncooks.enqueue(cookptr, cookptr->getMaxspeed());
+		Ncooks.enqueue(cookptr, cookptr->getspeed());
 	}
 	while (Gcookscopy.dequeue(cookptr))
 	{
-		Gcooks.enqueue(cookptr, cookptr->getMaxspeed());
+		Gcooks.enqueue(cookptr, cookptr->getspeed());
 	}
 	//update interface 
 	pGUI->UpdateInterface();

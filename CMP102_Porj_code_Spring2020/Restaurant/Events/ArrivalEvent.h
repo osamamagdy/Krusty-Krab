@@ -21,5 +21,4 @@ public:
 	virtual void Execute(Restaurant *pRest);	//override execute function
 
 };
-
 #endif
