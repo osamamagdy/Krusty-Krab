@@ -46,6 +46,8 @@ private:   // We should give here every data member used in the project, remembe
 	PQueue<Cook*>UnavailabaleCooks; // for unavailble cooks
 	
 	PQueue<Cook*>InjuredCooks;
+
+	Queue<Order*> finished_order;
 public:
 	
 	Restaurant();
@@ -55,10 +57,20 @@ public:
 	void RunSimulation();
 	void AddOrders(Order* po);
 	void loadfile();
-
+	void silenceMode();
 	void Seacrh(int Time, int ID, Order  *&frntEntry);
 
 	void FillDrawingList();
+	void autopormotedForNormal();
+	void urgentForVIP(int timestep);
+
+	bool assignOrderVIP(int timestep);
+	bool assignOrderVegan(int timestep);
+	bool assignOrderNormal(int timestep);
+	bool assignOrderInjured(int timestep, Order* orderptr); // is it by reference or value?
+	bool assignOrderBreak(int timestep, Order* orderptr);
+
+
 
 	//
 	// TODO: Add More Member Functions As Needed

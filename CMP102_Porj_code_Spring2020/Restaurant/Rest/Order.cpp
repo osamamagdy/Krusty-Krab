@@ -1,6 +1,6 @@
 #include "Order.h"
 
-int Order::orderautopormotion = 0;
+int Order::num_of_orderautopormoted = 0;
 
 Order::Order(int id, ORD_TYPE r_Type)
 {
@@ -27,7 +27,7 @@ void Order::SetType(ORD_TYPE type)
 }
 void Order::increase_promotion()
 {
-	orderautopormotion++;
+	num_of_orderautopormoted++;
 }
 int Order::GetAUto()
 {
@@ -35,7 +35,7 @@ int Order::GetAUto()
 }
 int Order::GetIncrese()
 {
-	return orderautopormotion;
+	return num_of_orderautopormoted;
 }
 Order::~Order()
 {
@@ -82,9 +82,10 @@ void Order::IncSer()
 {
 	ServTime++;
 }
-void Order ::IncWait()
+int Order ::IncWait()
 {
 	WaitTime++;
+	return WaitTime -1;
 }
 void Order:: CalFinish()
 {
@@ -113,6 +114,16 @@ int Order::getVIP_WT()
 {
 	return VIP_WT;
 }
+
+void Order::setOrderSize(int size)
+{
+	OrderSize = size;
+}
+int Order::getOrderSize()
+{
+	return OrderSize;
+}
+
 int Order::orderpromted = 0;
 int Order::VIP_WT = 0;
 

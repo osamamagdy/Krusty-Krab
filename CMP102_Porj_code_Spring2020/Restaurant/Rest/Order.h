@@ -10,7 +10,7 @@ protected:
 	int ID;         //Each order has a unique ID (from 1 --> 999 )
 	ORD_TYPE type;		//order type: Normal, vegan, VIP
 	ORD_STATUS status;	//waiting, in-service, done
-	static int orderautopormotion;	//this is only for Normal order 
+	static int num_of_orderautopormoted;	//this is only for Normal order 
 	                
 	double totalMoney;	//Total order money
 
@@ -50,13 +50,14 @@ public:
 	int getPriority();
 	void SetArr(int timestep);
 	void IncSer();
-	void IncWait();
+	int IncWait();
 	void CalFinish();
 	void SetSize(int size);
 	void AddMoney(double extra);
 	static void setautopormotion(int autop);
 	void SetType(ORD_TYPE type);
-	
+	void setOrderSize(int size);
+	int getOrderSize();
 	
 	
 

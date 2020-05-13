@@ -26,6 +26,7 @@ void Restaurant::RunSimulation()
 	case MODE_STEP:
 		break;
 	case MODE_SLNT:
+		silenceMode();
 		break;
 	case MODE_DEMO:
 		//Just_A_Demo();
@@ -36,6 +37,232 @@ void Restaurant::RunSimulation()
 
 	};
 
+}
+
+void Restaurant::silenceMode()
+{
+	int timestep=1;
+
+	while (!EventsQueue.isEmpty())
+	{
+		bool Vflag = true;
+		bool Gflag = true;
+		bool Nflag = true;
+		ExecuteEvents(timestep);
+		while (!Vorders.isEmpty() && Vflag)
+		{
+			Vflag=assignOrderVIP(timestep);
+		}
+		while (Vorders.isEmpty() && !Gorders.isEmpty() && Gflag)
+		{
+			Gflag = assignOrderVegan(timestep);
+		}
+		while (Vorders.isEmpty() && !Norders.isEmpty() && Nflag)
+		{
+			Nflag = assignOrderNormal(timestep);
+		}
+		autopormotedForNormal();
+		timestep++;
+	}
+}
+
+
+void Restaurant::autopormotedForNormal()
+{
+	Queue<Order*> temp;
+	Order* ptr;
+	while(!Norders.isEmpty())
+	{
+		Norders.dequeue(ptr);
+		int waitTime =ptr->IncWait();
+		int prmotedTime = ptr->GetAUto();
+		if (waitTime == prmotedTime)
+		{
+			ptr->SetType(TYPE_VIP);
+			AddOrders(ptr);
+			ptr->increase_promotion();
+		}
+		else
+			temp.enqueue(ptr);
+	}
+	while (!temp.isEmpty())
+	{
+		temp.dequeue(ptr);
+		Norders.enqueue(ptr);
+	}
+	
+}
+void Restaurant::urgentForVIP(int timestep)
+{
+	Queue<Order*> temp;
+	Order* ptr;
+	while (!Norders.isEmpty())
+	{
+	Vorders.dequeue(ptr);
+	int waitTime = ptr->IncWait();
+	int urgentTime = ptr->getVIP_WT();
+	if (waitTime == urgentTime)
+	{
+		if (!assignOrderVIP(timestep))
+		{
+			if (!assignOrderBreak(timestep, ptr))
+			{
+
+			}
+		}
+	}
+	else
+		temp.enqueue(ptr);
+    }
+    while (!temp.isEmpty())
+    {
+	temp.dequeue(ptr);
+	Norders.enqueue(ptr);
+    }
+}
+
+bool Restaurant::assignOrderVIP(int timestep)
+{
+	if (!Vcooks.isEmpty())
+	{
+		Order* the_order;
+		Cook* the_cook;
+		Vcooks.dequeue(the_cook);
+		Vorders.dequeue(the_order);
+		the_cook->setStatus(UNAVILABLE);
+		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
+		the_cook->CalUnavailabalePriority(timestep);
+		UnavailabaleCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+		finished_order.enqueue(the_order);
+		return true;
+	}
+	else if (!Ncooks.isEmpty())
+	{
+		Order* the_order;
+		Cook* the_cook;
+		Vcooks.dequeue(the_cook);
+		Vorders.dequeue(the_order);
+		the_cook->setStatus(UNAVILABLE);
+		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
+		the_cook->CalUnavailabalePriority(timestep);
+		UnavailabaleCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+		finished_order.enqueue(the_order);
+		return true;
+	}
+	else if (!Gcooks.isEmpty())
+	{
+		Order* the_order;
+		Cook* the_cook;
+		Vcooks.dequeue(the_cook);
+		Vorders.dequeue(the_order);
+		the_cook->setStatus(UNAVILABLE);
+		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
+		the_cook->CalUnavailabalePriority(timestep);
+		UnavailabaleCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+		finished_order.enqueue(the_order);
+		return true;
+	}
+	return false;
+}
+bool Restaurant::assignOrderVegan(int timestep)
+{
+	if (!Gcooks.isEmpty())
+	{
+		Order* the_order;
+		Cook* the_cook;
+		Vcooks.dequeue(the_cook);
+		Vorders.dequeue(the_order);
+		the_cook->setStatus(UNAVILABLE);
+		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
+		the_cook->CalUnavailabalePriority(timestep);
+		UnavailabaleCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+		finished_order.enqueue(the_order);
+		return true;
+	}
+	return false;
+}
+bool Restaurant::assignOrderNormal(int timestep)
+{
+	if (!Ncooks.isEmpty())
+	{
+		Order* the_order;
+		Cook* the_cook;
+		Vcooks.dequeue(the_cook);
+		Vorders.dequeue(the_order);
+		the_cook->setStatus(UNAVILABLE);
+		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
+		the_cook->CalUnavailabalePriority(timestep);
+		UnavailabaleCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+		finished_order.enqueue(the_order);
+		return true;
+	}
+	else if (!Vcooks.isEmpty())
+	{
+		Order* the_order;
+		Cook* the_cook;
+		Vcooks.dequeue(the_cook);
+		Vorders.dequeue(the_order);
+		the_cook->setStatus(UNAVILABLE);
+		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
+		the_cook->CalUnavailabalePriority(timestep);
+		UnavailabaleCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+		finished_order.enqueue(the_order);
+		return true;
+	}
+	return false;
+}
+bool Restaurant::assignOrderInjured(int timestep, Order* orderptr)  // didn't finish yet
+{
+	bool IsAssined = false;
+	Queue<Cook*> temp;
+	Cook* ptr;
+	while (!InjuredCooks.isEmpty())
+	{
+		InjuredCooks.dequeue(ptr);
+		if (ptr->GetStatus() == BREAK && timestep >= (ptr->getTimesteptobeavailabale() - ptr->getBreakduration()))
+		{
+			ptr->setTimesteptobeavailabale(orderptr->getOrderSize() / ptr->getspeed() + timestep + ptr->getBreakduration());
+			ptr->CalUnavailabalePriority(timestep);
+			IsAssined = true;
+		}
+		temp.enqueue(ptr);
+	}
+	while (!temp.isEmpty())
+	{
+		temp.dequeue(ptr);
+		InjuredCooks.enqueue(ptr, ptr->getUnavailabalePriority());
+	}
+	return IsAssined;
+}
+
+bool Restaurant::assignOrderBreak(int timestep, Order* orderptr)
+{
+	bool IsAssined=false;
+	Queue<Cook*> temp;
+	Cook* ptr;
+	while (!UnavailabaleCooks.isEmpty())
+	{
+		UnavailabaleCooks.dequeue(ptr);
+		if (ptr->GetStatus() == BREAK && timestep >= (ptr->getTimesteptobeavailabale() - ptr->getBreakduration()))
+		{
+			ptr->setTimesteptobeavailabale(orderptr->getOrderSize() / ptr->getspeed() + timestep + ptr->getBreakduration());
+			ptr->CalUnavailabalePriority(timestep);
+			IsAssined = true;
+		}
+		temp.enqueue(ptr);
+	}
+	while (!temp.isEmpty())
+	{
+		temp.dequeue(ptr);
+		UnavailabaleCooks.enqueue(ptr, ptr->getUnavailabalePriority());
+	}
+	return IsAssined;
 }
 
 void Restaurant::loadfile()

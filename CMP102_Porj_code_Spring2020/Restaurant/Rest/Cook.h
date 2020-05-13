@@ -13,7 +13,7 @@ class Cook
 	COOK_STATUS status;
 	static float InjProp ;
 	static int RstPrd;
-	int Unavailabalepriority, availabalepriority, N_orders_Finished, Timesteptobeavailabale;
+	int Unavailabalepriority, availabalepriority, Injuredpriority, N_orders_Finished, Timesteptobeavailabale;
 public:
 	Cook();
 	virtual ~Cook();
@@ -40,4 +40,10 @@ public:
 	void CalavailabalePriority();
 	int getavailabalePriority();
 	int GetN_orderFinshed();
+	void setTimesteptobeavailabale(int time);
+	int getTimesteptobeavailabale();
+	void setN_orders_Finished(int num);
+	int getN_orders_Finished();
+	void CalInjuredPriority();
+	int getInjuredPriority();
 };
