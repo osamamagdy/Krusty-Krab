@@ -9,7 +9,7 @@ using namespace std;
 #include "..\Events\PromotionEvent.h" 
 #include"Cook.h"
 #include "Order.h"
-Restaurant::Restaurant() 
+Restaurant::Restaurant()
 {
 	pGUI = NULL;
 }
@@ -33,7 +33,7 @@ void Restaurant::RunSimulation()
 		loadfile();
 		ExecuteEvents(30);
 		FillDrawingList();
-	
+
 
 	};
 
@@ -41,7 +41,7 @@ void Restaurant::RunSimulation()
 
 void Restaurant::silenceMode()
 {
-	int timestep=1;
+	int timestep = 1;
 
 	while (!EventsQueue.isEmpty())
 	{
@@ -51,7 +51,7 @@ void Restaurant::silenceMode()
 		ExecuteEvents(timestep);
 		while (!Vorders.isEmpty() && Vflag)
 		{
-			Vflag=assignOrderVIP(timestep);
+			Vflag = assignOrderVIP(timestep);
 		}
 		while (Vorders.isEmpty() && !Gorders.isEmpty() && Gflag)
 		{
@@ -61,6 +61,7 @@ void Restaurant::silenceMode()
 		{
 			Nflag = assignOrderNormal(timestep);
 		}
+		urgentForVIP(timestep);
 		autopormotedForNormal();
 		timestep++;
 	}
@@ -71,10 +72,10 @@ void Restaurant::autopormotedForNormal()
 {
 	Queue<Order*> temp;
 	Order* ptr;
-	while(!Norders.isEmpty())
+	while (!Norders.isEmpty())
 	{
 		Norders.dequeue(ptr);
-		int waitTime =ptr->IncWait();
+		int waitTime = ptr->IncWait();
 		int prmotedTime = ptr->GetAUto();
 		if (waitTime == prmotedTime)
 		{
@@ -90,35 +91,36 @@ void Restaurant::autopormotedForNormal()
 		temp.dequeue(ptr);
 		Norders.enqueue(ptr);
 	}
-	
+
 }
 void Restaurant::urgentForVIP(int timestep)
 {
 	Queue<Order*> temp;
 	Order* ptr;
-	while (!Norders.isEmpty())
+	while (!Vorders.isEmpty())
 	{
-	Vorders.dequeue(ptr);
-	int waitTime = ptr->IncWait();
-	int urgentTime = ptr->getVIP_WT();
-	if (waitTime == urgentTime)
-	{
-		if (!assignOrderVIP(timestep))
+		Vorders.dequeue(ptr);
+		int waitTime = ptr->IncWait();
+		int urgentTime = ptr->getVIP_WT();
+		if (waitTime == urgentTime)
 		{
-			if (!assignOrderBreak(timestep, ptr))
+			if (!assignOrderVIP(timestep))
 			{
-				assignOrderInjured(timestep, ptr);
+				if (!assignOrderBreak(timestep, ptr))
+				{
+					if(!assignOrderInjured(timestep, ptr))
+						temp.enqueue(ptr);
+				}
 			}
 		}
+		else
+			temp.enqueue(ptr);
 	}
-	else
-		temp.enqueue(ptr);
-    }
-    while (!temp.isEmpty())
-    {
-	temp.dequeue(ptr);
-	Norders.enqueue(ptr);
-    }
+	while (!temp.isEmpty())
+	{
+		temp.dequeue(ptr);
+		Norders.enqueue(ptr);
+	}
 }
 
 bool Restaurant::assignOrderVIP(int timestep)
@@ -141,8 +143,8 @@ bool Restaurant::assignOrderVIP(int timestep)
 	{
 		Order* the_order;
 		Cook* the_cook;
-		Vcooks.dequeue(the_cook);
-		Vorders.dequeue(the_order);
+		Ncooks.dequeue(the_cook);
+		Norders.dequeue(the_order);
 		the_cook->setStatus(UNAVILABLE);
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
@@ -155,8 +157,8 @@ bool Restaurant::assignOrderVIP(int timestep)
 	{
 		Order* the_order;
 		Cook* the_cook;
-		Vcooks.dequeue(the_cook);
-		Vorders.dequeue(the_order);
+		Gcooks.dequeue(the_cook);
+		Gorders.dequeue(the_order);
 		the_cook->setStatus(UNAVILABLE);
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
@@ -173,8 +175,8 @@ bool Restaurant::assignOrderVegan(int timestep)
 	{
 		Order* the_order;
 		Cook* the_cook;
-		Vcooks.dequeue(the_cook);
-		Vorders.dequeue(the_order);
+		Gcooks.dequeue(the_cook);
+		Gorders.dequeue(the_order);
 		the_cook->setStatus(UNAVILABLE);
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
@@ -191,8 +193,8 @@ bool Restaurant::assignOrderNormal(int timestep)
 	{
 		Order* the_order;
 		Cook* the_cook;
-		Vcooks.dequeue(the_cook);
-		Vorders.dequeue(the_order);
+		Ncooks.dequeue(the_cook);
+		Norders.dequeue(the_order);
 		the_cook->setStatus(UNAVILABLE);
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
@@ -217,7 +219,7 @@ bool Restaurant::assignOrderNormal(int timestep)
 	}
 	return false;
 }
-bool Restaurant::assignOrderInjured(int timestep, Order* orderptr) 
+bool Restaurant::assignOrderInjured(int timestep, Order* orderptr)
 {
 	bool IsAssined = false;
 	Queue<Cook*> temp;
@@ -242,7 +244,7 @@ bool Restaurant::assignOrderInjured(int timestep, Order* orderptr)
 }
 bool Restaurant::assignOrderBreak(int timestep, Order* orderptr)
 {
-	bool IsAssined=false;
+	bool IsAssined = false;
 	Queue<Cook*> temp;
 	Cook* ptr;
 	while (!UnavailabaleCooks.isEmpty())
@@ -266,24 +268,24 @@ bool Restaurant::assignOrderBreak(int timestep, Order* orderptr)
 
 void Restaurant::loadfile()
 {
-	int Ncook, Gcook, Vcook, NspeedMin, NspeedMax,GspeedMin, GspeedMax, VspeedMin, VspeedMax, OrdersToBreak, NBreakMin,NBreakMax, GbreakMin,GbreakMax, VbreakMin, VbreakMax,AutoP, EventsNum;
+	int Ncook, Gcook, Vcook, NspeedMin, NspeedMax, GspeedMin, GspeedMax, VspeedMin, VspeedMax, OrdersToBreak, NBreakMin, NBreakMax, GbreakMin, GbreakMax, VbreakMin, VbreakMax, AutoP, EventsNum;
 	char EventType;
 	char OTYP; int TS, ID, SIZE;
 	ORD_TYPE TYP;
 	double MONY;
 	int  RstPrd, VIP_WT;
-	float InjProp ;
+	float InjProp;
 	ifstream Input;
 	Input.open("Input.txt");
 
 	Input >> Ncook >> Gcook >> Vcook;
 	Input >> NspeedMin >> NspeedMax >> GspeedMin >> GspeedMax >> VspeedMin >> VspeedMax;
-	Input >> OrdersToBreak >> NBreakMin >> NBreakMax >> GbreakMin>> GbreakMax >>VbreakMin>> VbreakMax;
+	Input >> OrdersToBreak >> NBreakMin >> NBreakMax >> GbreakMin >> GbreakMax >> VbreakMin >> VbreakMax;
 	Input >> InjProp >> RstPrd;
 	Input >> AutoP >> VIP_WT;
 	Input >> EventsNum;
 
-	
+
 	//creating Ncooks
 	Cook* newNcooks = new Cook[Ncook];
 	//creating Gcooks
@@ -303,11 +305,11 @@ void Restaurant::loadfile()
 	//setting data for normal cooks and enqueue them
 	for (int i = 0; i < Ncook; i++)
 	{
-		newNcooks[i].setSpeed(NspeedMin +rand()%NspeedMax);
-		
+		newNcooks[i].setSpeed(NspeedMin + rand() % NspeedMax);
+
 		newNcooks[i].setType(TYPE_NRM);
-		newNcooks[i].setBreakduration(NBreakMin+rand()%NBreakMin);
-		
+		newNcooks[i].setBreakduration(NBreakMin + rand() % NBreakMin);
+
 		newNcooks[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
 		Ncooks.enqueue(&newNcooks[i], newNcooks[i].getspeed());
@@ -315,23 +317,23 @@ void Restaurant::loadfile()
 	//setting data for vegan cooks and enqueue them
 	for (int i = 0; i < Gcook; i++)
 	{
-		newGcooks[i].setSpeed(GspeedMin +rand()%GspeedMax);
-	
+		newGcooks[i].setSpeed(GspeedMin + rand() % GspeedMax);
+
 		newGcooks[i].setType(TYPE_VGAN);
-		newGcooks[i].setBreakduration(GbreakMin+rand()%GbreakMax);
-		
+		newGcooks[i].setBreakduration(GbreakMin + rand() % GbreakMax);
+
 		newGcooks[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
-		Gcooks.enqueue(&newGcooks[i],newGcooks[i].getspeed());
+		Gcooks.enqueue(&newGcooks[i], newGcooks[i].getspeed());
 	}
 	//setting data for VIP cooks and enqueue them
 	for (int i = 0; i < Vcook; i++)
 	{
-		newVcook[i].setSpeed(VspeedMin +rand()%VspeedMax);
-	
+		newVcook[i].setSpeed(VspeedMin + rand() % VspeedMax);
+
 		newVcook[i].setType(TYPE_VIP);
-		newVcook[i].setBreakduration(VbreakMin+ rand()%VbreakMax);
-		
+		newVcook[i].setBreakduration(VbreakMin + rand() % VbreakMax);
+
 		newVcook[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
 		Vcooks.enqueue(&newVcook[i], newVcook[i].getspeed());
@@ -343,46 +345,46 @@ void Restaurant::loadfile()
 
 	for (int i = 0; i < EventsNum; i++)
 	{
-	   Input >> EventType;
+		Input >> EventType;
 
-	   switch (EventType)
-	   {
-		   //arrival event
-	   case 'R':
-	   {
-		   Input >> OTYP >> TS >> ID >> SIZE >> MONY;
-		   switch (OTYP)
-		   {
-		   case 'N':
-			   TYP = TYPE_NRM;
-			   break;
-		   case 'G':
-			   TYP = TYPE_VGAN;
-			   break;
-		   case 'V':
-			   TYP = TYPE_VIP;
-			   break;
-		   }
-		   newevent = new ArrivalEvent(TS, ID, TYP, MONY, SIZE);
-		   break;
-	   }
-	   //cancellation event
-	   case 'X':
-	   {
-		   Input >> TS >> ID;
-		   newevent = new CancellationEvent(TS, ID);
-		   break;
-	   }
-	   //Promotion event
-	   case 'P':
-	   {
-		   Input >> TS >> ID >> MONY;
-		   newevent = new PromotionEvent (TS,ID,MONY);
-		   break;
-	   }
+		switch (EventType)
+		{
+			//arrival event
+		case 'R':
+		{
+			Input >> OTYP >> TS >> ID >> SIZE >> MONY;
+			switch (OTYP)
+			{
+			case 'N':
+				TYP = TYPE_NRM;
+				break;
+			case 'G':
+				TYP = TYPE_VGAN;
+				break;
+			case 'V':
+				TYP = TYPE_VIP;
+				break;
+			}
+			newevent = new ArrivalEvent(TS, ID, TYP, MONY, SIZE);
+			break;
+		}
+		//cancellation event
+		case 'X':
+		{
+			Input >> TS >> ID;
+			newevent = new CancellationEvent(TS, ID);
+			break;
+		}
+		//Promotion event
+		case 'P':
+		{
+			Input >> TS >> ID >> MONY;
+			newevent = new PromotionEvent(TS, ID, MONY);
+			break;
+		}
 
-	   }
-	   EventsQueue.enqueue(newevent);
+		}
+		EventsQueue.enqueue(newevent);
 
 	}
 	Input.close();
@@ -394,10 +396,10 @@ void Restaurant::loadfile()
 //Executes ALL events that should take place at current timestep
 void Restaurant::ExecuteEvents(int CurrentTimeStep)
 {
-	Event *pE;
-	while( EventsQueue.peekFront(pE) )	//as long as there are more events
+	Event* pE;
+	while (EventsQueue.peekFront(pE))	//as long as there are more events
 	{
-		if(pE->getEventTime() > CurrentTimeStep )	//no more events at current timestep
+		if (pE->getEventTime() > CurrentTimeStep)	//no more events at current timestep
 			return;
 
 		pE->Execute(this);
@@ -410,8 +412,8 @@ void Restaurant::ExecuteEvents(int CurrentTimeStep)
 
 Restaurant::~Restaurant()
 {
-		if (pGUI)
-			delete pGUI;
+	if (pGUI)
+		delete pGUI;
 }
 
 void Restaurant::FillDrawingList()
@@ -421,13 +423,13 @@ void Restaurant::FillDrawingList()
 	Order* orderptr;
 	Cook* cookptr;
 	//orders copy 
-	PQueue<Order*> Vorderscopy;	
-    Queue<Order*> Norderscopy;  
+	PQueue<Order*> Vorderscopy;
+	Queue<Order*> Norderscopy;
 	Queue<Order*> Gorderscopy;
 	//cooks copy
-	PQueue<Cook*> Vcookscopy;   
-	PQueue<Cook*> Ncookscopy;   
-	PQueue<Cook*> Gcookscopy;  
+	PQueue<Cook*> Vcookscopy;
+	PQueue<Cook*> Ncookscopy;
+	PQueue<Cook*> Gcookscopy;
 	//Drawing orders using add to drawing list and copy it 
 	while (Vorders.dequeue(orderptr))
 	{
@@ -507,11 +509,11 @@ void Restaurant::FillDrawingList()
 //It should be removed starting phase 1
 void Restaurant::Just_A_Demo()
 {
-	
+
 	//
 	// THIS IS JUST A DEMO FUNCTION
 	// IT SHOULD BE REMOVED IN PHASE 1 AND PHASE 2
-	
+
 //	int EventCnt;	
 //	Order* pOrd;
 //	Event* pEv;
@@ -608,7 +610,7 @@ void Restaurant::Just_A_Demo()
 //	pGUI->PrintMessage("generation done, click to END program");
 //	pGUI->waitForClick();
 
-	
+
 }
 ////////////////
 
@@ -634,12 +636,12 @@ void Restaurant::AddOrders(Order* po)
 	else if (po->GetType() == TYPE_VIP)
 	{
 		po->CalPriority();
-		Vorders.enqueue(po,po->getPriority());
+		Vorders.enqueue(po, po->getPriority());
 		//add order for Vip
 	}
 
 }
-void Restaurant::Seacrh(int Time, int ID,Order *& frntEntry)
+void Restaurant::Seacrh(int Time, int ID, Order*& frntEntry)
 {
 	Queue<Order*> qtemp;
 	Order* Otemp;
@@ -650,7 +652,7 @@ void Restaurant::Seacrh(int Time, int ID,Order *& frntEntry)
 			qtemp.enqueue(Otemp);
 		else
 			frntEntry = Otemp;
-		
+
 	}
 
 	while (qtemp.dequeue(Otemp))
