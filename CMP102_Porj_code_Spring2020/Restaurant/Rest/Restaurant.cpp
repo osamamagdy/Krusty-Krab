@@ -107,7 +107,7 @@ void Restaurant::urgentForVIP(int timestep)
 		{
 			if (!assignOrderBreak(timestep, ptr))
 			{
-
+				assignOrderInjured(timestep, ptr);
 			}
 		}
 	}
@@ -217,17 +217,17 @@ bool Restaurant::assignOrderNormal(int timestep)
 	}
 	return false;
 }
-bool Restaurant::assignOrderInjured(int timestep, Order* orderptr)  // didn't finish yet
+bool Restaurant::assignOrderInjured(int timestep, Order* orderptr) 
 {
 	bool IsAssined = false;
 	Queue<Cook*> temp;
 	Cook* ptr;
-	while (!InjuredCooks.isEmpty())
+	while (!UnavailabaleCooks.isEmpty())
 	{
-		InjuredCooks.dequeue(ptr);
-		if (ptr->GetStatus() == BREAK && timestep >= (ptr->getTimesteptobeavailabale() - ptr->getBreakduration()))
+		UnavailabaleCooks.dequeue(ptr);
+		if (ptr->GetStatus() == INJURD && timestep >= (ptr->getTimesteptobeavailabale() - ptr->getRstPrd()))
 		{
-			ptr->setTimesteptobeavailabale(orderptr->getOrderSize() / ptr->getspeed() + timestep + ptr->getBreakduration());
+			ptr->setTimesteptobeavailabale(orderptr->getOrderSize() / ptr->getspeed() + timestep);
 			ptr->CalUnavailabalePriority(timestep);
 			IsAssined = true;
 		}
@@ -236,11 +236,10 @@ bool Restaurant::assignOrderInjured(int timestep, Order* orderptr)  // didn't fi
 	while (!temp.isEmpty())
 	{
 		temp.dequeue(ptr);
-		InjuredCooks.enqueue(ptr, ptr->getUnavailabalePriority());
+		UnavailabaleCooks.enqueue(ptr, ptr->getUnavailabalePriority());
 	}
 	return IsAssined;
 }
-
 bool Restaurant::assignOrderBreak(int timestep, Order* orderptr)
 {
 	bool IsAssined=false;

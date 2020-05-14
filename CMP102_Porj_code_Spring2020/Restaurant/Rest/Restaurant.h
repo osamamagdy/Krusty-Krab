@@ -45,8 +45,6 @@ private:   // We should give here every data member used in the project, remembe
 
 	PQueue<Cook*>UnavailabaleCooks; // for unavailble cooks
 	
-	PQueue<Cook*>InjuredCooks;
-
 	Queue<Order*> finished_order;
 public:
 	
