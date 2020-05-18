@@ -44,8 +44,9 @@ private:   // We should give here every data member used in the project, remembe
 	PQueue<Cook*> Gcooks;   //Priority Queue for all vegan cooks
 
 	PQueue<Cook*>UnavailabaleCooks; // for unavailble cooks
-	
-	Queue<Order*> finished_order;
+
+	PQueue<Order*>  prepare_Order;   //queue for served orders 
+	Queue<Order*> finished_order; //done orders 
 public:
 	
 	Restaurant();
@@ -67,9 +68,13 @@ public:
 	bool assignOrderNormal(int timestep);
 	bool assignOrderInjured(int timestep, Order* orderptr); // is it by reference or value?
 	bool assignOrderBreak(int timestep, Order* orderptr);
-
-
-
+	void assignOrdertofinish(int timestep);
+	void checkunavailblecooks(int timestep);
+	//for output file 
+	//algorithms to sort 
+	void reheapdown(Order **& arr, int n, int root);
+	void heapSort(Order **& arr, int n);
+	void outputfile();
 	//
 	// TODO: Add More Member Functions As Needed
 	//
@@ -78,7 +83,7 @@ public:
 /// ===================    DEMO-related functions. Should be removed in phases 1&2   ================= 
 
 	void Just_A_Demo();	//just to show a demo and should be removed in phase1 1 & 2
-	void AddtoDemoQueue(Order* po);	//adds an order to the demo queue
+	//void AddtoDemoQueue(Order* po);	//adds an order to the demo queue
 
 /// ================================================================================================== 
 

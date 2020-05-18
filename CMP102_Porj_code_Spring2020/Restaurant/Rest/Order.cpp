@@ -1,7 +1,10 @@
 #include "Order.h"
 
 int Order::num_of_orderautopormoted = 0;
-
+int Order::Ordercount =0 ;
+int Order::Vordercount = 0;
+int Order::Nordercount = 0;
+int Order::Gordercount = 0;
 Order::Order(int id, ORD_TYPE r_Type)
 {
 	Priority = 0;
@@ -19,6 +22,22 @@ Order::Order(int id, ORD_TYPE r_Type, double money, int size, int timestep)
 	ID = (id > 0 && id < 1000) ? id : 0;	//1<ID<999
 	type = r_Type;
 	status = WAIT;
+	//for output file 
+	Ordercount++;
+
+	switch (r_Type)
+	{
+	case TYPE_NRM:
+		Nordercount++;
+		break;
+	case TYPE_VGAN:
+		Vordercount++;
+		break;
+	case TYPE_VIP:
+		Vordercount++;
+		break;
+	
+	}
 	
 }
 void Order::SetType(ORD_TYPE type)
@@ -122,6 +141,58 @@ void Order::setOrderSize(int size)
 int Order::getOrderSize()
 {
 	return OrderSize;
+}
+
+void Order::setwaittime(int time)
+{
+	WaitTime = time;
+}
+
+void Order::setservicetime(int time)
+{
+	ServTime = time;
+}
+
+
+int Order::getFinshtime()
+{
+	
+	return FinishTime;
+}
+
+int Order::getorderarrivaltime()
+{
+	return ArrTime;
+}
+
+int Order::getwaittime()
+{
+	return WaitTime;
+}
+
+int Order::getservicetime()
+{
+	return WaitTime;
+}
+
+int Order::getordercount()
+{
+	return Ordercount;
+}
+
+int Order::getVordercount()
+{
+	return Vordercount;
+}
+
+int Order::getNordercount()
+{
+	return Nordercount;
+}
+
+int Order::getGordercount()
+{
+	return Gordercount;
 }
 
 int Order::orderpromted = 0;

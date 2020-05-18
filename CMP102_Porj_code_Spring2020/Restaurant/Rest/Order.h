@@ -23,7 +23,11 @@ protected:
 	int WaitTime;  // The time the order waits before bieng assigned to the cook
 	int OrderSize; // How many Dishes in the order
 	int Priority;  // The Priorits of servicing the order (used only for VIP orders)
-	//
+	//for outputfile 
+	static int Ordercount;
+	static int Vordercount;
+	static int Nordercount;
+	static int Gordercount;
 
 public:
 	Order(int ID, ORD_TYPE r_Type);
@@ -48,7 +52,9 @@ public:
 
 	void CalPriority();
 	int getPriority();
+
 	void SetArr(int timestep);
+
 	void IncSer();
 	int IncWait();
 	void CalFinish();
@@ -58,9 +64,16 @@ public:
 	void SetType(ORD_TYPE type);
 	void setOrderSize(int size);
 	int getOrderSize();
-	
-	
-
+	void setwaittime(int time);
+	void setservicetime(int time);
+	int getFinshtime();
+	int getorderarrivaltime();
+	int getwaittime();
+	int getservicetime();
+	static int getordercount();
+	static int getVordercount();
+	static int getNordercount();
+	static int getGordercount();
 };
 
 #endif

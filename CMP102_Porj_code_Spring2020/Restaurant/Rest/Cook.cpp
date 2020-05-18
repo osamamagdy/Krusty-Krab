@@ -3,6 +3,10 @@
 int Cook::OrderstoBreak = 0;
 float Cook::InjProp = 0;
 int Cook::RstPrd = 0;
+int Cook::Vcount = 0;
+int Cook::Gcount = 0;
+int Cook::Ncount = 0;
+
 Cook::Cook()
 {
 	N_orders_Finished = 0;
@@ -59,6 +63,11 @@ void Cook::setordertobreak(int ordtobreak)
 	OrderstoBreak = ordtobreak;
 }
 
+int Cook::get_order_to_break()
+{
+	return OrderstoBreak;
+}
+
 
 COOK_STATUS Cook::GetStatus()const
 {
@@ -96,11 +105,7 @@ void Cook::CalUnavailabalePriority(int RealTimestep)
 	Unavailabalepriority = Timesteptobeavailabale+(N_orders_Finished/OrderstoBreak)*Breakduration
 		                  +(status/ INJURD)*(Timesteptobeavailabale-RealTimestep)
 		                  +(status / INJURD)*(1-(N_orders_Finished / OrderstoBreak))* RstPrd;
-	if ((N_orders_Finished / OrderstoBreak) >= 1)
-	{
-		status = BREAK;
-		N_orders_Finished = 0;
-	}
+	
 }
 
 int Cook::getUnavailabalePriority()
@@ -119,6 +124,41 @@ void Cook::CalInjuredPriority()
 int Cook::getInjuredPriority()
 {
 	return Injuredpriority;
+}
+
+void Cook::setVcount(int count)
+{
+	Vcount = count;
+}
+
+void Cook::setNcount(int count)
+{
+	Ncount = count;
+}
+
+void Cook::setGcount(int count)
+{
+	Gcount = count;
+}
+
+int Cook::GetVcount()
+{
+	return Vcount;
+}
+
+int Cook::GetNcount()
+{
+	return Gcount;
+}
+
+int Cook::GetGcount()
+{
+	return Gcount;
+}
+
+int Cook::Getcookscount()
+{
+	return( Vcount+Gcount+Ncount);
 }
 
 

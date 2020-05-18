@@ -14,6 +14,10 @@ class Cook
 	static float InjProp ;
 	static int RstPrd;
 	int Unavailabalepriority, availabalepriority, Injuredpriority, N_orders_Finished, Timesteptobeavailabale;
+	//data members for output file 
+	static int Vcount;
+	static int Ncount;
+	static int Gcount;
 public:
 	Cook();
 	virtual ~Cook();
@@ -25,6 +29,7 @@ public:
 	void setSpeed(int s);
 	void setBreakduration(int B);
 	static void setordertobreak(int ordtobreak);
+	static int get_order_to_break();
 	COOK_STATUS GetStatus()const;
 	void setID(int ID);
 	void setType(ORD_TYPE type) ;
@@ -46,4 +51,14 @@ public:
 	int getN_orders_Finished();
 	void CalInjuredPriority();
 	int getInjuredPriority();
+	//output file member func
+	static void setVcount(int count);
+	static void setNcount(int count);
+	static void setGcount(int count);
+	static int GetVcount();
+	static int GetNcount();
+	static int GetGcount();
+	static int Getcookscount();
+	
+
 };
