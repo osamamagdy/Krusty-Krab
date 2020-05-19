@@ -6,6 +6,7 @@ int Cook::RstPrd = 0;
 int Cook::Vcount = 0;
 int Cook::Gcount = 0;
 int Cook::Ncount = 0;
+int Cook::num_injure_cook = 0;
 
 Cook::Cook()
 {
@@ -171,6 +172,16 @@ int Cook::GetGcount()
 int Cook::Getcookscount()
 {
 	return( Vcount+Gcount+Ncount);
+}
+
+void Cook::increase_injury()
+{
+	num_injure_cook++;
+}
+
+int Cook::get_num_of_injury()
+{
+	return num_injure_cook;
 }
 
 

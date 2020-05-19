@@ -28,7 +28,7 @@ protected:
 	static int Vordercount;
 	static int Nordercount;
 	static int Gordercount;
-
+	static int count_Urgent;
 public:
 	Order(int ID, ORD_TYPE r_Type);
 	
@@ -36,7 +36,7 @@ public:
 	Order(int ID, ORD_TYPE r_Type, double money, int size, int timestep);
 	void increase_promotion();
 	int GetAUto();
-	int GetIncrese();
+	static int Get_num_of_order_auto_P();
 	virtual ~Order();
 
 	int GetID();
@@ -74,6 +74,8 @@ public:
 	static int getVordercount();
 	static int getNordercount();
 	static int getGordercount();
+	static void increase_urgent();
+	static int get_Urgent_num();
 };
 
 #endif

@@ -5,6 +5,7 @@ int Order::Ordercount =0 ;
 int Order::Vordercount = 0;
 int Order::Nordercount = 0;
 int Order::Gordercount = 0;
+int Order::count_Urgent = 0;
 Order::Order(int id, ORD_TYPE r_Type)
 {
 	Priority = 0;
@@ -22,22 +23,7 @@ Order::Order(int id, ORD_TYPE r_Type, double money, int size, int timestep)
 	ID = (id > 0 && id < 1000) ? id : 0;	//1<ID<999
 	type = r_Type;
 	status = WAIT;
-	//for output file 
-	Ordercount++;
-
-	switch (r_Type)
-	{
-	case TYPE_NRM:
-		Nordercount++;
-		break;
-	case TYPE_VGAN:
-		Vordercount++;
-		break;
-	case TYPE_VIP:
-		Vordercount++;
-		break;
 	
-	}
 	
 }
 void Order::SetType(ORD_TYPE type)
@@ -52,7 +38,7 @@ int Order::GetAUto()
 {
 	return orderpromted;
 }
-int Order::GetIncrese()
+int Order::Get_num_of_order_auto_P()
 {
 	return num_of_orderautopormoted;
 }
@@ -194,6 +180,16 @@ int Order::getNordercount()
 int Order::getGordercount()
 {
 	return Gordercount;
+}
+
+void Order::increase_urgent()
+{
+	count_Urgent++;
+}
+
+int Order::get_Urgent_num()
+{
+	return count_Urgent;
 }
 
 int Order::orderpromted = 0;

@@ -83,6 +83,7 @@ public:
 	void reheapdown(Order **& arr, int n, int root);
 	void heapSort(Order **& arr, int n);
 	void outputfile();
+	void getavgSTandWT(Order** arr,int count , float& avgWT, float& avgST);
 	//
 	// TODO: Add More Member Functions As Needed
 	//

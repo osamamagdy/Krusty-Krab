@@ -170,6 +170,7 @@ void Restaurant::urgentForVIP(int timestep)
 		int urgentTime = ptr->getVIP_WT();
 		if (waitTime >= urgentTime)
 		{
+			Order::increase_urgent();
 			if (!assignOrderVIP(timestep))
 			{
 				if (!assignOrderBreak(timestep, ptr))
@@ -581,12 +582,13 @@ void Restaurant::checkunavailblecooks(int timestep)
 				if (the_order != the_cook->getServedOrder())
 				{
 					///////////This case shouldn't happen so i will make it an error to be obvious to correct in the coming cases
-					cout << 1 / 0;
+					cout << "in valid";
 					/////// The first cook in BusyCooks should have the first order in prepare_Order
 				}
 				int remaining_time_for_serving = the_cook->getTimesteptobeavailabale() - timestep;
 				the_cook->setStatus(INJURD);
 				the_cook->setSpeed(the_cook->getspeed() / 2);
+				Cook::increase_injury(); // for out file 
 				the_cook->setTimesteptobeavailabale(the_cook->getTimesteptobeavailabale() + remaining_time_for_serving);
 				the_order->setservicetime(the_order->getservicetime() + remaining_time_for_serving);
 				the_order->CalFinish();
@@ -1079,13 +1081,16 @@ void Restaurant::outputfile()
 {
 	//sorting the finish queue 
 	int count = 0;
+	float AvgWT = 0.0;
+	float AvgST = 0.0;
 	Order** finisharr = finished_order.toArray(count);
 	heapSort(finisharr, count);
+	//getting avg wait time and avg service time 
+	getavgSTandWT(finisharr,count, AvgWT, AvgST);
 	pGUI->PrintMessage("Enter file output name ");
 	string file_name = pGUI->GetString();
-
 	ofstream myfile;
-	myfile.open(file_name);
+	myfile.open(file_name+".txt");
 	//writing finish time and id and arrival time and wait time and service time of each order
 	myfile << "FT" << " " << "ID" << " " << "AT" << " " << "WT" << " " << "ST" << "\n";
 	for (int i = 0; i < count; i++)
@@ -1098,8 +1103,22 @@ void Restaurant::outputfile()
 	myfile << "Orders: " << Order::getordercount() << " [Norm:" << Order::getNordercount();
 	myfile << ", Veg:" << Order::getGordercount() << ", VIP:" << Order::getVordercount() << "]\n";
 	//writing num of all cooks and num of all types of cooks
-	//myfile << "cooks: " << Cook::Getcookscount() << " [Norm:" << Cook::GetNcount() << ", Veg:" << Cook::GetGcount() << ", VIP" << Cook::GetVcount();
-	//myfile << ", injured:" <</*injurynum*/"]" << "\n";
+	myfile << "cooks: " << Cook::Getcookscount() << " [Norm:" << Cook::GetNcount() << ", Veg:" << Cook::GetGcount() << ", VIP" << Cook::GetVcount();
+	myfile << ", injured:" << Cook::get_num_of_injury()<<"]" << "\n";
+	//getting avg of 
+	myfile << "Avg Wait = " << AvgWT << ",  Avg Serv = " << AvgST << "\n";
+	myfile << " Urgent orders : " << Order::get_Urgent_num() << ", Auto - promoted :" << Order::Get_num_of_order_auto_P() << "\n";
+}
 
-
+void Restaurant::getavgSTandWT(Order** arr, int count, float& avgWT, float& avgST)
+{
+	float WTsum = 0;
+	float STsum = 0;
+	for (int i = 0; i < count; i++)
+	{
+		WTsum+=arr[i]->getwaittime();
+		STsum+=arr[i]->getservicetime();
+	}
+	avgWT = (WTsum) / float(count);
+	avgST = (STsum) / float(count);
 }

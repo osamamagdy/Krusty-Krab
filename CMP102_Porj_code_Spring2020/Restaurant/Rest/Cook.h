@@ -22,6 +22,7 @@ class Cook
 	static int Vcount;
 	static int Ncount;
 	static int Gcount;
+	static int num_injure_cook;
 public:
 	Cook();
 	virtual ~Cook();
@@ -71,6 +72,8 @@ public:
 	static int GetNcount();
 	static int GetGcount();
 	static int Getcookscount();
+	static void increase_injury();
+	static int get_num_of_injury();
 	
 
 };
