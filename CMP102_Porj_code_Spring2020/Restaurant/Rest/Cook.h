@@ -1,7 +1,7 @@
 #pragma once
 
 #include "..\Defs.h"
-
+#include "Order.h"
 #pragma once
 class Cook
 {
@@ -9,11 +9,15 @@ class Cook
 	int ID;
 	ORD_TYPE type;	//for each order type there is a corresponding type (VIP, Normal, Vegan)
 	int speed;		//dishes it can prepare in one clock tick (in one timestep)
+	int OriginalSpeed;
 	int Breakduration;
 	COOK_STATUS status;
 	static float InjProp ;
 	static int RstPrd;
 	int Unavailabalepriority, availabalepriority, Injuredpriority, N_orders_Finished, Timesteptobeavailabale;
+	
+	Order* ServedOrder; 
+	
 	//data members for output file 
 	static int Vcount;
 	static int Ncount;
@@ -40,7 +44,7 @@ public:
 	static void  SetInjProp(float i);
 	static float getInjProp();
 	int getBreakduration();
-	void CalUnavailabalePriority(int RealTimeStep);
+	void CalUnavailabalePriority(/*int RealTimeStep*/);
 	int getUnavailabalePriority();
 	void CalavailabalePriority();
 	int getavailabalePriority();
@@ -51,6 +55,14 @@ public:
 	int getN_orders_Finished();
 	void CalInjuredPriority();
 	int getInjuredPriority();
+
+	Order* getServedOrder();
+
+	void setServedOrder(Order* Served);
+
+	void setOriginalSpeed(int sp);
+	int getOriginalSpeed();
+
 	//output file member func
 	static void setVcount(int count);
 	static void setNcount(int count);

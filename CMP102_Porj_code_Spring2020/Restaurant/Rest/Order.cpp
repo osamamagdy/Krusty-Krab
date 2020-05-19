@@ -84,7 +84,8 @@ ORD_STATUS Order::getStatus() const
 
 void Order::CalPriority()
 {
-	Priority = (2 * OrderSize) + (int(totalMoney) / 100) - ArrTime;
+	Priority = 100 * ArrTime + (2 * OrderSize) + (int(totalMoney) / 100);
+	 
 }
 
 int Order:: getPriority()

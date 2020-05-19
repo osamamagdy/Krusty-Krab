@@ -43,7 +43,15 @@ private:   // We should give here every data member used in the project, remembe
 
 	PQueue<Cook*> Gcooks;   //Priority Queue for all vegan cooks
 
-	PQueue<Cook*>UnavailabaleCooks; // for unavailble cooks
+	PQueue<Cook*>BusyCooks; // for cooks who took orders
+	
+	PQueue<Cook*>InjuredCooks; // for cooks who are injured
+	
+	PQueue<Cook*>BreakCooks; // for cooks who are in Break
+
+
+
+	 
 
 	PQueue<Order*>  prepare_Order;   //queue for served orders 
 	Queue<Order*> finished_order; //done orders 
@@ -60,7 +68,7 @@ public:
 	void Seacrh(int Time, int ID, Order  *&frntEntry);
 
 	void FillDrawingList();
-	void autopormotedForNormal();
+	void autopormotedForNormal(int time);
 	void urgentForVIP(int timestep);
 
 	bool assignOrderVIP(int timestep);
@@ -78,6 +86,11 @@ public:
 	//
 	// TODO: Add More Member Functions As Needed
 	//
+
+
+	float random();
+
+
 
 
 /// ===================    DEMO-related functions. Should be removed in phases 1&2   ================= 

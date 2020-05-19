@@ -15,6 +15,10 @@ void PromotionEvent::Execute(Restaurant* pRest)
 	//This function is to promote the normal orders only to become vip
 
   //To Do ::
+
+
+    if (ExMoney <= 0)
+        return;
     Order* nptr = nullptr;
     pRest->Seacrh(EventTime, OrderID, nptr);
     if (nptr)
@@ -23,22 +27,14 @@ void PromotionEvent::Execute(Restaurant* pRest)
         //increase money
         nptr->SetType(TYPE_VIP);
         //change the type
+        pRest->AddOrders(nptr);
+        //add to VIP orders
         //if (ExMoney == 0) //auto promtion
         //{
         //    nptr->increase_promotion();
         //    pRest->AddOrders(nptr);
         //}
-        //else 
-		if (ExMoney > 0)
-        {
-            pRest->AddOrders(nptr);
-        }
-        else
-        {
-            delete nptr;
-            nptr = NULL;
-        }
-        //add to VIP orders
+        //else
     }
   // First check that the order type through the passed ID if it is not Normal
   // If it is normal , search for it in the waiting orders only using the passed ID

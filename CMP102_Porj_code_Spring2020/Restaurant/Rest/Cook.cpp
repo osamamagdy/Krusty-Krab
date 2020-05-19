@@ -12,6 +12,16 @@ Cook::Cook()
 	N_orders_Finished = 0;
 }
 
+int Cook::getOriginalSpeed()
+{
+	return OriginalSpeed;
+}
+
+
+void Cook::setOriginalSpeed(int sp)
+{
+	OriginalSpeed = sp;
+}
 
 Cook::~Cook()
 {
@@ -100,12 +110,14 @@ float Cook::getInjProp()
 {
 	return InjProp;
 }
-void Cook::CalUnavailabalePriority(int RealTimestep)
+void Cook::CalUnavailabalePriority(/*int RealTimestep*/)
 {
-	Unavailabalepriority = Timesteptobeavailabale+(N_orders_Finished/OrderstoBreak)*Breakduration
+	Unavailabalepriority = 1000 - Timesteptobeavailabale;
+		
+		/*                +(N_orders_Finished/OrderstoBreak)*Breakduration
 		                  +(status/ INJURD)*(Timesteptobeavailabale-RealTimestep)
 		                  +(status / INJURD)*(1-(N_orders_Finished / OrderstoBreak))* RstPrd;
-	
+		*/	
 }
 
 int Cook::getUnavailabalePriority()
@@ -114,12 +126,12 @@ int Cook::getUnavailabalePriority()
 }
 void Cook::CalavailabalePriority()
 {
-	availabalepriority=speed + ID + type ;
+	availabalepriority=speed;
 }
 
 void Cook::CalInjuredPriority()
 {
-	Injuredpriority = Timesteptobeavailabale + ID;
+	Injuredpriority = (1000-Timesteptobeavailabale);
 }
 int Cook::getInjuredPriority()
 {
@@ -183,3 +195,16 @@ int Cook::getN_orders_Finished()
 {
 	return N_orders_Finished;
 }
+
+
+Order* Cook::getServedOrder()
+{
+	return ServedOrder;
+}
+
+
+void Cook::setServedOrder(Order* Served)
+{
+	ServedOrder = Served;
+}
+

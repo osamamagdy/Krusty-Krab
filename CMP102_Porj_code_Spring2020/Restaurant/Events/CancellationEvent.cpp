@@ -13,6 +13,7 @@ void CancellationEvent::Execute(Restaurant* pRest)
       //This function is to cancel the normal orders only 
 	Order* nptr = nullptr;
 	//To Do ::
+	/////We just search in the waiting orders only
 	pRest->Seacrh(EventTime, OrderID,nptr);
 	
 	if (nptr)
