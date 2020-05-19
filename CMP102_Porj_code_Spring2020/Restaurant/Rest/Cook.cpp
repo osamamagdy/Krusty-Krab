@@ -161,7 +161,7 @@ int Cook::GetVcount()
 
 int Cook::GetNcount()
 {
-	return Gcount;
+	return Ncount;
 }
 
 int Cook::GetGcount()

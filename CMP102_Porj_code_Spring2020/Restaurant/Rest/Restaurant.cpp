@@ -30,6 +30,7 @@ float Restaurant::random()
 void Restaurant::RunSimulation()
 {
 	pGUI = new GUI;
+	loadfile();
 	PROG_MODE	mode = pGUI->getGUIMode();
 
 	switch (mode)	//Add a function for each mode in next phases
@@ -39,7 +40,6 @@ void Restaurant::RunSimulation()
 	case MODE_STEP:
 		break;
 	case MODE_SLNT:
-		loadfile();
 		FillDrawingList();
 		silenceMode();
 		break;
@@ -50,6 +50,7 @@ void Restaurant::RunSimulation()
 
 
 	};
+	outputfile();
 
 }
 
@@ -57,7 +58,7 @@ void Restaurant::silenceMode()
 {
 	int timestep = 1;
 
-	while (!EventsQueue.isEmpty())
+	while (!EventsQueue.isEmpty() || Order::getordercount()!= Order::getFinishedOrdersCount() )
 	{
 		bool Vflag = true;
 		bool Gflag = true;
@@ -99,7 +100,16 @@ void Restaurant::autopormotedForNormal(int time)
 			Norders.dequeue(ptr);
 			ptr->SetType(TYPE_VIP);
 			AddOrders(ptr);
+			
+			////////Number of auto promoted orders
 			ptr->increase_promotion();
+
+
+			///////Number of Orders
+			Order::setNOrderscount(Order::getNordercount() - 1);
+
+			Order::setVOrderscount(Order::getVordercount() + 1);
+
 		}
 		else
 		{
@@ -415,6 +425,9 @@ void Restaurant::assignOrdertofinish(int timestep)
 		{
 			finished_order.enqueue(the_order);
 			the_order->setStatus(DONE);
+
+			Order::setFinishedOrdersCount(Order::getFinishedOrdersCount() + 1);
+
 		}
 		else
 		{
@@ -1036,7 +1049,7 @@ void Restaurant::reheapdown(Order**& arr, int n, int root)
 		largest = l;
 
 	//if left child is equal the largest so far 
-	if (l < n && arr[r]->getFinshtime() == arr[largest]->getFinshtime())
+	if (l < n && arr[l]->getFinshtime() == arr[largest]->getFinshtime())
 		if (arr[l]->getorderarrivaltime() > arr[largest]->getorderarrivaltime())
 			largest = l;
 

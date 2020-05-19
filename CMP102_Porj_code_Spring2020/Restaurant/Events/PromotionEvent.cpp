@@ -29,6 +29,11 @@ void PromotionEvent::Execute(Restaurant* pRest)
         //change the type
         pRest->AddOrders(nptr);
         //add to VIP orders
+        Order::setNOrderscount(Order::getNordercount() - 1);
+
+        Order::setVOrderscount(Order::getVordercount() + 1);
+
+        
         //if (ExMoney == 0) //auto promtion
         //{
         //    nptr->increase_promotion();

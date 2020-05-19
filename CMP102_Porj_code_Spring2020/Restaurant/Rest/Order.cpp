@@ -6,12 +6,37 @@ int Order::Vordercount = 0;
 int Order::Nordercount = 0;
 int Order::Gordercount = 0;
 int Order::count_Urgent = 0;
+
+int Order::FinishedOrdersCount = 0;
+
+int Order::orderpromted = 0;
+int Order::VIP_WT = 0;
+
+
 Order::Order(int id, ORD_TYPE r_Type)
 {
+
 	Priority = 0;
 	ID = (id>0&&id<1000)?id:0;	//1<ID<999
 	type = r_Type;
 	status = WAIT;
+
+	Order::Ordercount = Order::Ordercount + 1;
+
+	switch (type)
+	{
+	case TYPE_NRM :
+		Order::Nordercount = Order::Nordercount + 1;
+		break;
+
+	case TYPE_VGAN :
+		Order::Gordercount = Order::Gordercount + 1;
+		break;
+	case TYPE_VIP:
+		Order::Vordercount = Order::Vordercount + 1;
+	}
+
+
 }
 
 Order::Order(int id, ORD_TYPE r_Type, double money, int size, int timestep)
@@ -23,7 +48,22 @@ Order::Order(int id, ORD_TYPE r_Type, double money, int size, int timestep)
 	ID = (id > 0 && id < 1000) ? id : 0;	//1<ID<999
 	type = r_Type;
 	status = WAIT;
-	
+
+	Order::Ordercount = Order::Ordercount + 1;
+
+	switch (type)
+	{
+	case TYPE_NRM:
+		Order::Nordercount = Order::Nordercount + 1;
+		break;
+
+	case TYPE_VGAN:
+		Order::Gordercount = Order::Gordercount + 1;
+		break;
+	case TYPE_VIP:
+		Order::Vordercount = Order::Vordercount + 1;
+	}
+
 	
 }
 void Order::SetType(ORD_TYPE type)
@@ -159,7 +199,7 @@ int Order::getwaittime()
 
 int Order::getservicetime()
 {
-	return WaitTime;
+	return ServTime;
 }
 
 int Order::getordercount()
@@ -192,7 +232,31 @@ int Order::get_Urgent_num()
 	return count_Urgent;
 }
 
-int Order::orderpromted = 0;
-int Order::VIP_WT = 0;
+
+void Order::setOrderscount(int num)
+{
+	Order::Ordercount = num;
+}
+
+void Order::setNOrderscount(int num)
+{
+	Order::Nordercount = num;
+}
 
 
+void Order::setVOrderscount(int num)
+{
+	Order::Vordercount = num;
+}
+
+
+void Order::setFinishedOrdersCount(int num)
+{
+	Order::FinishedOrdersCount = num;
+}
+
+
+int Order::getFinishedOrdersCount()
+{
+	return Order::FinishedOrdersCount;
+}

@@ -29,6 +29,8 @@ protected:
 	static int Nordercount;
 	static int Gordercount;
 	static int count_Urgent;
+	static int FinishedOrdersCount;
+
 public:
 	Order(int ID, ORD_TYPE r_Type);
 	
@@ -61,6 +63,15 @@ public:
 	void SetSize(int size);
 	void AddMoney(double extra);
 	static void setautopormotion(int autop);
+
+	static void setOrderscount(int num);
+	static void setNOrderscount(int num);
+	static void setVOrderscount(int num);
+	static void setFinishedOrdersCount(int num);
+
+	static int getFinishedOrdersCount();
+
+
 	void SetType(ORD_TYPE type);
 	void setOrderSize(int size);
 	int getOrderSize();
