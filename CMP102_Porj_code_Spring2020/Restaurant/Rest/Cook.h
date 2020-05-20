@@ -47,15 +47,11 @@ public:
 	int getBreakduration();
 	void CalUnavailabalePriority(/*int RealTimeStep*/);
 	int getUnavailabalePriority();
-	void CalavailabalePriority();
-	int getavailabalePriority();
-	int GetN_orderFinshed();
+
 	void setTimesteptobeavailabale(int time);
 	int getTimesteptobeavailabale();
 	void setN_orders_Finished(int num);
 	int getN_orders_Finished();
-	void CalInjuredPriority();
-	int getInjuredPriority();
 
 	Order* getServedOrder();
 

@@ -23,6 +23,7 @@ protected:
 	int WaitTime;  // The time the order waits before bieng assigned to the cook
 	int OrderSize; // How many Dishes in the order
 	int Priority;  // The Priorits of servicing the order (used only for VIP orders)
+	int time_when_became_VIP; //The time step at which the order became VIP order
 	//for outputfile 
 	static int Ordercount;
 	static int Vordercount;
@@ -70,6 +71,10 @@ public:
 	static void setFinishedOrdersCount(int num);
 
 	static int getFinishedOrdersCount();
+
+
+	void set_time_when_became_VIP(int time);
+	int get_time_when_became_VIP();
 
 
 	void SetType(ORD_TYPE type);

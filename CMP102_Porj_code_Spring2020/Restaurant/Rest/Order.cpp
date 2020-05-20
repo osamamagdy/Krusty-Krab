@@ -39,6 +39,24 @@ Order::Order(int id, ORD_TYPE r_Type)
 
 }
 
+
+
+
+void Order::set_time_when_became_VIP(int time)
+{
+	time_when_became_VIP = time;
+}
+
+
+int Order::get_time_when_became_VIP()
+{
+	return time_when_became_VIP ;
+}
+
+
+
+
+
 Order::Order(int id, ORD_TYPE r_Type, double money, int size, int timestep)
 {
 	Priority = 0;
@@ -55,13 +73,17 @@ Order::Order(int id, ORD_TYPE r_Type, double money, int size, int timestep)
 	{
 	case TYPE_NRM:
 		Order::Nordercount = Order::Nordercount + 1;
+		time_when_became_VIP = 0;
 		break;
 
 	case TYPE_VGAN:
 		Order::Gordercount = Order::Gordercount + 1;
+		time_when_became_VIP = 0;
 		break;
 	case TYPE_VIP:
 		Order::Vordercount = Order::Vordercount + 1;
+		time_when_became_VIP = timestep;
+		break;
 	}
 
 	

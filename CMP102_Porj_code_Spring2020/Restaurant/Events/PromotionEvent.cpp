@@ -33,6 +33,8 @@ void PromotionEvent::Execute(Restaurant* pRest)
 
         Order::setVOrderscount(Order::getVordercount() + 1);
 
+
+        nptr->set_time_when_became_VIP(EventTime);
         
         //if (ExMoney == 0) //auto promtion
         //{

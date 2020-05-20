@@ -40,10 +40,6 @@ ORD_TYPE Cook::GetType() const
 	return type;
 }
 
-int  Cook::GetN_orderFinshed()
-{
-	return N_orders_Finished;
-}
 void Cook::setID(int id)
 {
 	ID = id;
@@ -125,19 +121,6 @@ int Cook::getUnavailabalePriority()
 {
 	return Unavailabalepriority;
 }
-void Cook::CalavailabalePriority()
-{
-	availabalepriority=speed;
-}
-
-void Cook::CalInjuredPriority()
-{
-	Injuredpriority = (1000-Timesteptobeavailabale);
-}
-int Cook::getInjuredPriority()
-{
-	return Injuredpriority;
-}
 
 void Cook::setVcount(int count)
 {
@@ -185,10 +168,6 @@ int Cook::get_num_of_injury()
 }
 
 
-int Cook::getavailabalePriority()
-{
-	return availabalepriority;
-}
 
 void Cook::setTimesteptobeavailabale(int time)
 {

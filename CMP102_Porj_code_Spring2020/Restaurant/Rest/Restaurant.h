@@ -80,23 +80,25 @@ public:
 	void checkunavailblecooks(int timestep);
 	//for output file 
 	//algorithms to sort 
-	void reheapdown(Order **& arr, int n, int root);
-	void heapSort(Order **& arr, int n);
+	
+	//void reheapdown(Order **& arr, int n, int root);
+	//void heapSort(Order **& arr, int n);
 	void outputfile();
 	void getavgSTandWT(Order** arr,int count , float& avgWT, float& avgST);
+	void shellSort(Order* arr[], int n);
+
 	//
 	// TODO: Add More Member Functions As Needed
 	//
 
 
-	float random();
-
+	
 
 
 
 /// ===================    DEMO-related functions. Should be removed in phases 1&2   ================= 
 
-	void Just_A_Demo();	//just to show a demo and should be removed in phase1 1 & 2
+	//void Just_A_Demo();	//just to show a demo and should be removed in phase1 1 & 2
 	//void AddtoDemoQueue(Order* po);	//adds an order to the demo queue
 
 /// ================================================================================================== 
