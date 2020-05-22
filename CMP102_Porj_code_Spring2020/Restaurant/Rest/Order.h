@@ -31,6 +31,10 @@ protected:
 	static int Gordercount;
 	static int count_Urgent;
 	static int FinishedOrdersCount;
+	//for printing in status bar 
+	static int Waiting_Vorder;
+	static int Waiting_Norder;
+	static int Waiting_Gorder;
 
 public:
 	Order(int ID, ORD_TYPE r_Type);
@@ -92,6 +96,13 @@ public:
 	static int getGordercount();
 	static void increase_urgent();
 	static int get_Urgent_num();
+	static void set_waiting_Vorder(int num);
+	static void set_waiting_Norder(int num);
+	static void set_waiting_Gorder(int num);
+	static int get_waiting_Vorder();
+	static int get_waiting_Norder();
+	static int get_waiting_Gorder();
+
 };
 
 #endif

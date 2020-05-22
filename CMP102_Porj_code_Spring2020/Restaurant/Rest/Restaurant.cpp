@@ -2,6 +2,7 @@
 #include <time.h>
 #include <iostream>
 #include <fstream>
+#include <string>
 using namespace std;
 
 #include "Restaurant.h"
@@ -27,12 +28,13 @@ void Restaurant::RunSimulation()
 	switch (mode)	//Add a function for each mode in next phases
 	{
 	case MODE_INTR:
+		Restaurant_modes(0);
 		break;
 	case MODE_STEP:
+		Restaurant_modes(1);
 		break;
 	case MODE_SLNT:
-		FillDrawingList();
-		silenceMode();
+		Restaurant_modes(2);
 		break;
 
 
@@ -41,10 +43,21 @@ void Restaurant::RunSimulation()
 
 }
 
-void Restaurant::silenceMode()
+void Restaurant::Restaurant_modes(int mode)
 {
 	int timestep = 1;
-
+	switch (mode)
+	{
+	case 0:
+		pGUI->PrintMessage("Welcome To our Restaurant in interactive Mode.... ");
+		break;
+	case 1:
+		pGUI->PrintMessage("Welcome To our Restaurant in step-by-step  Mode.... ");
+		break;
+	case 2:
+		pGUI->PrintMessage("Welcome To our Restaurant in silent mode  Mode....");
+		break;
+	}
 	while (!EventsQueue.isEmpty() || Order::getordercount()!= Order::getFinishedOrdersCount() )
 	{
 		bool Vflag = true;
@@ -67,6 +80,24 @@ void Restaurant::silenceMode()
 		}
 		urgentForVIP(timestep);
 		autopormotedForNormal(timestep);
+		if (mode == 0|| mode==1)
+		{
+			if (mode == 0)
+			{
+				pGUI->waitForClick();	
+			}
+			else if (mode == 1)
+			{
+				Sleep(1000);
+			}
+			FillDrawingList();
+			string masg1 = " TS: " + to_string(timestep);
+			string masg2 = "# Waiting VIP-Order: " + to_string(Order::get_waiting_Vorder()) + " # Waiting Norm-Order: " + to_string(Order::get_waiting_Norder()) + "# Waiting Veg-Order: " + to_string(Order::get_waiting_Gorder());
+			string masg3 = "# Available-VIP-Cooks:"  "# Available-Norm-Cooks:"  "# Available-VIP-Cook:";
+			pGUI->PrintMessage(masg1, masg2, masg3);
+		}
+		
+
 		timestep++;
 	}
 }
@@ -211,7 +242,6 @@ bool Restaurant::assignOrderVIP(int timestep)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
-		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		return true;
@@ -232,7 +262,6 @@ bool Restaurant::assignOrderVIP(int timestep)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
-		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 
@@ -254,7 +283,6 @@ bool Restaurant::assignOrderVIP(int timestep)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
-		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		return true;
@@ -279,7 +307,6 @@ bool Restaurant::assignOrderVegan(int timestep)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
-		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 
@@ -305,7 +332,6 @@ bool Restaurant::assignOrderNormal(int timestep)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
-		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 
@@ -327,7 +353,6 @@ bool Restaurant::assignOrderNormal(int timestep)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
-		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 
@@ -363,7 +388,6 @@ bool Restaurant::assignOrderInjured(int timestep, Order* the_order)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
-		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 
@@ -394,7 +418,6 @@ bool Restaurant::assignOrderBreak(int timestep, Order* the_order)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
-		the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 
@@ -470,6 +493,7 @@ void Restaurant::checkunavailblecooks(int timestep)
 		{
 
 			BusyCooks.dequeue(the_cook);
+			the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
 
 			if (the_cook->GetStatus() == INJURD)
 			{
@@ -663,8 +687,7 @@ void Restaurant::loadfile()
 	int  RstPrd, VIP_WT;
 	float InjProp;
 	ifstream myfile;
-	//pGUI->PrintMessage("Enter file input name.txt");
-	//string file_name = pGUI->GetString();
+	
 	pGUI->PrintMessage("Enter file input name");
 	string file_name = pGUI->GetString();
 
@@ -787,6 +810,8 @@ void Restaurant::loadfile()
 
 }
 
+
+
 //////////////////////////////////  Event handling functions   /////////////////////////////
 
 //Executes ALL events that should take place at current timestep
@@ -819,10 +844,12 @@ void Restaurant::FillDrawingList()
 	NOrdersCount = 0;
 	GOrdersCount = 0;
 
-	int  VCooksCount, NCooksCount, GCooksCount;
+	int  VCooksCount, NCooksCount, GCooksCount,ServOrder,Doneorder;
 	VCooksCount = 0;
 	NCooksCount = 0;
 	GCooksCount = 0;
+	ServOrder = 0;
+	Doneorder = 0;
 	//This function should be implemented in phase1
 	//It should add ALL orders and Cooks to the drawing list
 	Order* orderptr;
@@ -831,12 +858,16 @@ void Restaurant::FillDrawingList()
 	Order** Vorderscopy = Vorders.toArray(VOrdersCount);
 	Order** Norderscopy = Norders.toArray(NOrdersCount);
 	Order** Gorderscopy = Gorders.toArray(GOrdersCount);
+	Order::set_waiting_Gorder(GOrdersCount);
+	Order::set_waiting_Norder(NOrdersCount);
+	Order::set_waiting_Vorder(VOrdersCount);
 	//cooks copy
 	Cook** Vcookscopy = Vcooks.toArray(VCooksCount);
 	Cook** Ncookscopy = Ncooks.toArray(NCooksCount);
 	Cook** Gcookscopy = Gcooks.toArray(GCooksCount);
-
-
+	// surved and done orders
+	Order** Servordercopy = prepare_Order.toArray(ServOrder);
+	Order** Doneordercopy = finished_order.toArray(Doneorder);
 	///////////////Drawing VIP Orders ///////////////
 	for (int i = 0; i < VOrdersCount ; i++)
 	{
@@ -877,6 +908,18 @@ void Restaurant::FillDrawingList()
 	{
 		pGUI->AddToDrawingList(Gcookscopy[i]);
 	}
+	///////////////Drawing SerV Cooks ///////////////
+	for (int i = 0; i < ServOrder; i++)
+	{
+		pGUI->AddToDrawingList(Servordercopy[i]);
+
+	}
+	///////////////Drawing Done Cooks ///////////////
+	for (int i = 0; i < Doneorder; i++)
+	{
+		pGUI->AddToDrawingList(Doneordercopy[i]);
+
+	}
 
 	//update interface 
 	pGUI->UpdateInterface();
@@ -913,7 +956,7 @@ void Restaurant::AddOrders(Order* po)
 	}
 
 }
-void Restaurant::Seacrh(int Time, int ID, Order*& frntEntry)
+void Restaurant::Seacrh( int ID, Order*& frntEntry)
 {
 	Queue<Order*> qtemp;
 	Order* Otemp;

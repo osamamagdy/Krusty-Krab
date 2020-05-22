@@ -14,7 +14,7 @@ void CancellationEvent::Execute(Restaurant* pRest)
 	Order* nptr = nullptr;
 	//To Do ::
 	/////We just search in the waiting orders only
-	pRest->Seacrh(EventTime, OrderID,nptr);
+	pRest->Seacrh( OrderID,nptr);
 	
 	if (nptr)
 	{//delete order 

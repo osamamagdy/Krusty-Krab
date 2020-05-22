@@ -11,7 +11,9 @@ int Order::FinishedOrdersCount = 0;
 
 int Order::orderpromted = 0;
 int Order::VIP_WT = 0;
-
+int Order::Waiting_Gorder = 0;
+int Order::Waiting_Norder = 0;
+int Order::Waiting_Vorder = 0;
 
 Order::Order(int id, ORD_TYPE r_Type)
 {
@@ -252,6 +254,36 @@ void Order::increase_urgent()
 int Order::get_Urgent_num()
 {
 	return count_Urgent;
+}
+
+void Order::set_waiting_Vorder(int num)
+{
+	Waiting_Vorder = num;
+}
+
+void Order::set_waiting_Norder(int num)
+{
+	Waiting_Norder = num;
+}
+
+void Order::set_waiting_Gorder(int num)
+{
+	Waiting_Gorder = num;
+}
+
+int Order::get_waiting_Vorder()
+{
+	return Waiting_Vorder;
+}
+
+int Order::get_waiting_Norder()
+{
+	return Waiting_Norder;
+}
+
+int Order::get_waiting_Gorder()
+{
+	return Waiting_Gorder;
 }
 
 

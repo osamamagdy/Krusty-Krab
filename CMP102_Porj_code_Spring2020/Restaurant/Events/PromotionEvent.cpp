@@ -20,7 +20,7 @@ void PromotionEvent::Execute(Restaurant* pRest)
     if (ExMoney <= 0)
         return;
     Order* nptr = nullptr;
-    pRest->Seacrh(EventTime, OrderID, nptr);
+    pRest->Seacrh( OrderID, nptr);
     if (nptr)
     {
         nptr->AddMoney(ExMoney);

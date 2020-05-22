@@ -55,6 +55,8 @@ private:   // We should give here every data member used in the project, remembe
 
 	PQueue<Order*>  prepare_Order;   //queue for served orders 
 	Queue<Order*> finished_order; //done orders 
+
+	
 public:
 	
 	Restaurant();
@@ -64,8 +66,8 @@ public:
 	void RunSimulation();
 	void AddOrders(Order* po);
 	void loadfile();
-	void silenceMode();
-	void Seacrh(int Time, int ID, Order  *&frntEntry);
+	void Restaurant_modes(int mode);
+	void Seacrh( int ID, Order  *&frntEntry);
 
 	void FillDrawingList();
 	void autopormotedForNormal(int time);
