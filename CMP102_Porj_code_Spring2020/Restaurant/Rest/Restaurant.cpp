@@ -66,8 +66,9 @@ void Restaurant::Restaurant_modes(int mode)
 		bool Gflag = true;
 		bool Nflag = true;
 		ExecuteEvents(timestep);
-		checkunavailblecooks(timestep);
 		assignOrdertofinish(timestep);
+		checkunavailblecooks(timestep);
+		
 		while (!Vorders.isEmpty() && Vflag)
 		{
 			Vflag = assignOrderVIP(timestep, masg4);
@@ -677,15 +678,18 @@ void Restaurant::checkunavailblecooks(int timestep)
 	if (curr_prop <= Cook::getInjProp())
 	{
 		Queue<Cook*> temp;
+		Queue<Order*>temp2;
+		Order* the_order;
 
-
-		while (!(BusyCooks.isEmpty()) && flag)
-		{
+		while (!(BusyCooks.isEmpty()) && flag && !(prepare_Order.isEmpty()))
+		{// the size is equal but every thing may happen
 			BusyCooks.dequeue(the_cook);
+			
+			prepare_Order.dequeue(the_order);
 			if (the_cook->GetStatus() != INJURD)
 			{
-				Order* the_order;
-				prepare_Order.dequeue(the_order);
+				
+				
 
 
 				if (the_order != the_cook->getServedOrder())
@@ -719,13 +723,16 @@ void Restaurant::checkunavailblecooks(int timestep)
 			else
 			{
 				temp.enqueue(the_cook);
+				temp2.enqueue(the_order);
 			}
 		}
 
-		while (!temp.isEmpty())
-		{
+		while (!temp.isEmpty() && temp2.isEmpty())
+		{//the size of temp=temp2 but i do it for every thing may happen
+			temp2.dequeue(the_order);
 			temp.dequeue(the_cook);
 			BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+			prepare_Order.enqueue(the_order, the_order->getFinshtime());
 		}
 
 
