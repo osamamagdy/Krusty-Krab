@@ -58,8 +58,10 @@ void Restaurant::Restaurant_modes(int mode)
 		pGUI->PrintMessage("Welcome To our Restaurant in silent mode  Mode....");
 		break;
 	}
-	while (!EventsQueue.isEmpty() || Order::getordercount()!= Order::getFinishedOrdersCount() )
+	while (!EventsQueue.isEmpty() || Order::getordercount() != Order::getFinishedOrdersCount())
 	{
+
+		string masg4 = "";
 		bool Vflag = true;
 		bool Gflag = true;
 		bool Nflag = true;
@@ -68,23 +70,23 @@ void Restaurant::Restaurant_modes(int mode)
 		assignOrdertofinish(timestep);
 		while (!Vorders.isEmpty() && Vflag)
 		{
-			Vflag = assignOrderVIP(timestep);
+			Vflag = assignOrderVIP(timestep, masg4);
 		}
 		while (Vorders.isEmpty() && !Gorders.isEmpty() && Gflag)
 		{
-			Gflag = assignOrderVegan(timestep);
+			Gflag = assignOrderVegan(timestep, masg4);
 		}
 		while (Vorders.isEmpty() && !Norders.isEmpty() && Nflag)
 		{
-			Nflag = assignOrderNormal(timestep);
+			Nflag = assignOrderNormal(timestep, masg4);
 		}
-		urgentForVIP(timestep);
+		urgentForVIP(timestep, masg4);
 		autopormotedForNormal(timestep);
-		if (mode == 0|| mode==1)
+		if (mode == 0 || mode == 1)
 		{
 			if (mode == 0)
 			{
-				pGUI->waitForClick();	
+				pGUI->waitForClick();
 			}
 			else if (mode == 1)
 			{
@@ -92,11 +94,13 @@ void Restaurant::Restaurant_modes(int mode)
 			}
 			FillDrawingList();
 			string masg1 = " TS: " + to_string(timestep);
-			string masg2 = "# Waiting VIP-Order: " + to_string(Order::get_waiting_Vorder()) + " # Waiting Norm-Order: " + to_string(Order::get_waiting_Norder()) + "# Waiting Veg-Order: " + to_string(Order::get_waiting_Gorder());
-			string masg3 = "# Available-VIP-Cooks:"  "# Available-Norm-Cooks:"  "# Available-VIP-Cook:";
-			pGUI->PrintMessage(masg1, masg2, masg3);
+			string masg2 = "Num of Waiting VIP-Order : " + to_string(Order::get_waiting_Vorder()) + "  Num of Waiting Norm-Order : " + to_string(Order::get_waiting_Norder()) + "  Num of Waiting Veg-Order : " + to_string(Order::get_waiting_Gorder());
+			string masg3 = "Num of Available-VIP-Cooks : " + to_string(Cook::GetAvailableVcount()) + "  Num of Available-Norm-Cooks :  " + to_string(Cook::GetAvailableNcount()) + "  Num of Available-Veg-Cook :  " + to_string(Cook::GetAvailableGcount());
+			string masg5 = "Num of Served VIP-Order : " + to_string(Order::get_Served_Vorder()) + "  Num of Served Norm-Order : " + to_string(Order::get_Served_Norder()) + "  Num of Served Veg-Order : " + to_string(Order::get_Served_Gorder());
+
+			pGUI->PrintMessage(masg1, masg2, masg3, masg4, masg5);
 		}
-		
+
 
 		timestep++;
 	}
@@ -118,7 +122,7 @@ void Restaurant::autopormotedForNormal(int time)
 			Norders.dequeue(ptr);
 			ptr->SetType(TYPE_VIP);
 			AddOrders(ptr);
-			
+
 			////////Number of auto promoted orders
 			ptr->increase_promotion();
 
@@ -139,7 +143,7 @@ void Restaurant::autopormotedForNormal(int time)
 	}
 
 }
-void Restaurant::urgentForVIP(int timestep)
+void Restaurant::urgentForVIP(int timestep, string& msg)
 {
 	Queue<Order*> temp;
 	Order* ptr;
@@ -201,16 +205,27 @@ void Restaurant::urgentForVIP(int timestep)
 		int urgentTime = ptr->getVIP_WT();
 		if (waitTime >= urgentTime)
 		{
-			Order::increase_urgent();
-			if (!assignOrderVIP(timestep))
+			if (!assignOrderVIP(timestep, msg))
 			{
-				if (!assignOrderBreak(timestep, ptr))
+				if (!assignOrderBreak(timestep, ptr, msg))
 				{
-					if (!assignOrderInjured(timestep, ptr))
+					if (!assignOrderInjured(timestep, ptr, msg))
 					{
 						flag = false;
 					}
+					else
+					{
+						Order::increase_urgent();
+					}
 				}
+				else
+				{
+					Order::increase_urgent();
+				}
+			}
+			else
+			{
+				Order::increase_urgent();
 			}
 		}
 		else
@@ -223,7 +238,7 @@ void Restaurant::urgentForVIP(int timestep)
 
 }
 
-bool Restaurant::assignOrderVIP(int timestep)
+bool Restaurant::assignOrderVIP(int timestep, string& msg)
 {
 	if (!Vcooks.isEmpty())
 	{
@@ -244,6 +259,9 @@ bool Restaurant::assignOrderVIP(int timestep)
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+		Cook::setAvailableVcount(Cook::GetAvailableVcount() - 1);
+		Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
+		msg += "  V" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
 		return true;
 	}
 	else if (!Ncooks.isEmpty())
@@ -251,7 +269,7 @@ bool Restaurant::assignOrderVIP(int timestep)
 		Order* the_order;
 		Cook* the_cook;
 		Ncooks.dequeue(the_cook);
-		Norders.dequeue(the_order);
+		Vorders.dequeue(the_order);
 		//set order new status and waiting time and calculate service time and assign to preprinng orders
 		the_order->setStatus(SRV);
 		the_order->setwaittime(timestep - the_order->getorderarrivaltime());
@@ -264,7 +282,9 @@ bool Restaurant::assignOrderVIP(int timestep)
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
-
+		Cook::setAvailableNcount(Cook::GetAvailableNcount() - 1);
+		Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
+		msg += "  N" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
 		return true;
 	}
 	else if (!Gcooks.isEmpty())
@@ -272,7 +292,7 @@ bool Restaurant::assignOrderVIP(int timestep)
 		Order* the_order;
 		Cook* the_cook;
 		Gcooks.dequeue(the_cook);
-		Gorders.dequeue(the_order);
+		Vorders.dequeue(the_order);
 		//set order new status and waiting time and calculate service time and assign to preprinng orders
 		the_order->setStatus(SRV);
 		the_order->setwaittime(timestep - the_order->getorderarrivaltime());
@@ -285,11 +305,14 @@ bool Restaurant::assignOrderVIP(int timestep)
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+		Cook::setAvailableGcount(Cook::GetAvailableGcount() - 1);
+		Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
+		msg += "  G" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
 		return true;
 	}
 	return false;
 }
-bool Restaurant::assignOrderVegan(int timestep)
+bool Restaurant::assignOrderVegan(int timestep, string& msg)
 {
 	if (!Gcooks.isEmpty())
 	{
@@ -309,12 +332,14 @@ bool Restaurant::assignOrderVegan(int timestep)
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
-
+		Cook::setAvailableGcount(Cook::GetAvailableGcount() - 1);
+		Order::set_Served_Gorder(Order::get_Served_Gorder() + 1);
+		msg += "  G" + to_string(the_cook->GetID()) + "(G" + to_string(the_order->GetID()) + ") ";
 		return true;
 	}
 	return false;
 }
-bool Restaurant::assignOrderNormal(int timestep)
+bool Restaurant::assignOrderNormal(int timestep, string& msg)
 {
 	if (!Ncooks.isEmpty())
 	{
@@ -334,7 +359,9 @@ bool Restaurant::assignOrderNormal(int timestep)
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
-
+		Cook::setAvailableNcount(Cook::GetAvailableNcount() - 1);
+		Order::set_Served_Norder(Order::get_Served_Norder() + 1);
+		msg += "  N" + to_string(the_cook->GetID()) + "(N" + to_string(the_order->GetID()) + ") ";
 		return true;
 	}
 	else if (!Vcooks.isEmpty())
@@ -342,7 +369,7 @@ bool Restaurant::assignOrderNormal(int timestep)
 		Order* the_order;
 		Cook* the_cook;
 		Vcooks.dequeue(the_cook);
-		Vorders.dequeue(the_order);
+		Norders.dequeue(the_order);
 		//setting order new status and waiting time and calculate service time and assign to preprinng orders
 		the_order->setStatus(SRV);
 		the_order->setwaittime(timestep - the_order->getorderarrivaltime());
@@ -355,7 +382,9 @@ bool Restaurant::assignOrderNormal(int timestep)
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
-
+		Cook::setAvailableVcount(Cook::GetAvailableVcount() - 1);
+		Order::set_Served_Norder(Order::get_Served_Norder() + 1);
+		msg += "  V" + to_string(the_cook->GetID()) + "(N" + to_string(the_order->GetID()) + ") ";
 		return true;
 	}
 	return false;
@@ -370,7 +399,7 @@ bool Restaurant::assignOrderNormal(int timestep)
 
 
 
-bool Restaurant::assignOrderInjured(int timestep, Order* the_order)
+bool Restaurant::assignOrderInjured(int timestep, Order* the_order, string& msg)
 {
 	bool IsAssined = false;
 	Queue<Cook*> temp;
@@ -391,13 +420,25 @@ bool Restaurant::assignOrderInjured(int timestep, Order* the_order)
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 
+		switch (the_cook->GetType())
+		{
+		case TYPE_NRM:
+			msg += " N" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+			break;
+		case TYPE_VIP:
+			msg += " V" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+			break;
+		case TYPE_VGAN:
+			msg += " G" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+			break;
+		}
 		IsAssined = true;
 
 	}
 	return IsAssined;
 }
 
-bool Restaurant::assignOrderBreak(int timestep, Order* the_order)
+bool Restaurant::assignOrderBreak(int timestep, Order* the_order, string& msg)
 {
 	bool IsAssined = false;
 	Queue<Cook*> temp;
@@ -420,6 +461,19 @@ bool Restaurant::assignOrderBreak(int timestep, Order* the_order)
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+
+		switch (the_cook->GetType())
+		{
+		case TYPE_NRM:
+			msg += " N" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+			break;
+		case TYPE_VIP:
+			msg += " V" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+			break;
+		case TYPE_VGAN:
+			msg += " G" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+			break;
+		}
 
 		IsAssined = true;
 
@@ -445,7 +499,7 @@ void Restaurant::assignOrdertofinish(int timestep)
 			prepare_Order.dequeue(the_order);
 
 			finished_at_this_time_step++;
-			FinishedArr[finished_at_this_time_step-1] = the_order;
+			FinishedArr[finished_at_this_time_step - 1] = the_order;
 			the_order->setStatus(DONE);
 
 			Order::setFinishedOrdersCount(Order::getFinishedOrdersCount() + 1);
@@ -463,14 +517,14 @@ void Restaurant::assignOrdertofinish(int timestep)
 
 	//////////////////////Store them inside the finishe_order queue /////////////////////////
 
-	for (int i = 0; i < finished_at_this_time_step ; i++)
+	for (int i = 0; i < finished_at_this_time_step; i++)
 	{
 		finished_order.enqueue(FinishedArr[i]);
 	}
 
 	///////////////////Delete the used array ////////////////////////////////
 
-	delete [] FinishedArr;
+	delete[] FinishedArr;
 	FinishedArr = nullptr;
 
 }
@@ -516,8 +570,8 @@ void Restaurant::checkunavailblecooks(int timestep)
 				the_cook->setN_orders_Finished(0);
 				the_cook->setTimesteptobeavailabale(timestep + the_cook->getBreakduration());
 				the_cook->CalUnavailabalePriority();
-				BreakCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 				the_cook->setSpeed(the_cook->getOriginalSpeed());
+				BreakCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 			}
 			else
 			{
@@ -525,12 +579,15 @@ void Restaurant::checkunavailblecooks(int timestep)
 				switch (the_cook->GetType())
 				{
 				case TYPE_NRM:
+					Cook::setAvailableNcount(Cook::GetAvailableNcount() + 1);
 					Ncooks.enqueue(the_cook, the_cook->getspeed());
 					break;
 				case TYPE_VGAN:
+					Cook::setAvailableGcount(Cook::GetAvailableGcount() + 1);
 					Gcooks.enqueue(the_cook, the_cook->getspeed());
 					break;
 				case TYPE_VIP:
+					Cook::setAvailableVcount(Cook::GetAvailableVcount() + 1);
 					Vcooks.enqueue(the_cook, the_cook->getspeed());
 					break;
 				}
@@ -645,7 +702,10 @@ void Restaurant::checkunavailblecooks(int timestep)
 				///////////////////this should be equal to : the_order->getFinishtime() - timestep;
 
 				the_cook->setStatus(INJURD);
-				the_cook->setSpeed(the_cook->getspeed() / 2);
+				if ( (the_cook->getspeed() / 2 ) >= 1)
+				{
+					the_cook->setSpeed(the_cook->getspeed() / 2);
+				}
 				Cook::increase_injury(); // for out file 
 				the_cook->setTimesteptobeavailabale(the_cook->getTimesteptobeavailabale() + remaining_time_for_serving);
 				the_order->setservicetime(the_order->getservicetime() + remaining_time_for_serving);
@@ -687,7 +747,7 @@ void Restaurant::loadfile()
 	int  RstPrd, VIP_WT;
 	float InjProp;
 	ifstream myfile;
-	
+
 	pGUI->PrintMessage("Enter file input name");
 	string file_name = pGUI->GetString();
 
@@ -703,6 +763,7 @@ void Restaurant::loadfile()
 
 	//creating Ncooks
 	Cook* newNcooks = new Cook[Ncook];
+
 	//creating Gcooks
 	Cook* newGcooks = new Cook[Gcook];
 	//creating Vcooks
@@ -711,6 +772,9 @@ void Restaurant::loadfile()
 	Cook::setVcount(Vcook);
 	Cook::setNcount(Ncook);
 	Cook::setGcount(Gcook);
+	Cook::setAvailableVcount(Vcook);
+	Cook::setAvailableNcount(Ncook);
+	Cook::setAvailableGcount(Gcook);
 
 	//setting static data type order to break 
 	Cook::setordertobreak(OrdersToBreak);
@@ -844,7 +908,7 @@ void Restaurant::FillDrawingList()
 	NOrdersCount = 0;
 	GOrdersCount = 0;
 
-	int  VCooksCount, NCooksCount, GCooksCount,ServOrder,Doneorder;
+	int  VCooksCount, NCooksCount, GCooksCount, ServOrder, Doneorder;
 	VCooksCount = 0;
 	NCooksCount = 0;
 	GCooksCount = 0;
@@ -869,7 +933,7 @@ void Restaurant::FillDrawingList()
 	Order** Servordercopy = prepare_Order.toArray(ServOrder);
 	Order** Doneordercopy = finished_order.toArray(Doneorder);
 	///////////////Drawing VIP Orders ///////////////
-	for (int i = 0; i < VOrdersCount ; i++)
+	for (int i = 0; i < VOrdersCount; i++)
 	{
 		pGUI->AddToDrawingList(Vorderscopy[i]);
 	}
@@ -924,7 +988,7 @@ void Restaurant::FillDrawingList()
 	//update interface 
 	pGUI->UpdateInterface();
 	pGUI->ResetDrawingList();
-	
+
 }
 
 
@@ -956,7 +1020,7 @@ void Restaurant::AddOrders(Order* po)
 	}
 
 }
-void Restaurant::Seacrh( int ID, Order*& frntEntry)
+void Restaurant::Seacrh(int ID, Order*& frntEntry)
 {
 	Queue<Order*> qtemp;
 	Order* Otemp;
@@ -987,11 +1051,11 @@ void Restaurant::outputfile()
 	Order** finisharr = finished_order.toArray(count);
 	//heapSort(finisharr, count);
 	//getting avg wait time and avg service time 
-	getavgSTandWT(finisharr,count, AvgWT, AvgST);
+	getavgSTandWT(finisharr, count, AvgWT, AvgST);
 	pGUI->PrintMessage("Enter file output name ");
 	string file_name = pGUI->GetString();
 	ofstream myfile;
-	myfile.open(file_name+".txt");
+	myfile.open(file_name + ".txt");
 	//writing finish time and id and arrival time and wait time and service time of each order
 	myfile << "FT" << " " << "ID" << " " << "AT" << " " << "WT" << " " << "ST" << "\n";
 	for (int i = 0; i < count; i++)
@@ -1005,7 +1069,7 @@ void Restaurant::outputfile()
 	myfile << ", Veg:" << Order::getGordercount() << ", VIP:" << Order::getVordercount() << "]\n";
 	//writing num of all cooks and num of all types of cooks
 	myfile << "cooks: " << Cook::Getcookscount() << " [Norm:" << Cook::GetNcount() << ", Veg:" << Cook::GetGcount() << ", VIP" << Cook::GetVcount();
-	myfile << ", injured:" << Cook::get_num_of_injury()<<"]" << "\n";
+	myfile << ", injured:" << Cook::get_num_of_injury() << "]" << "\n";
 	//getting avg of 
 	myfile << "Avg Wait = " << AvgWT << ",  Avg Serv = " << AvgST << "\n";
 	myfile << " Urgent orders : " << Order::get_Urgent_num() << ", Auto - promoted :" << Order::Get_num_of_order_auto_P() << "\n";
@@ -1017,15 +1081,15 @@ void Restaurant::getavgSTandWT(Order** arr, int count, float& avgWT, float& avgS
 	float STsum = 0;
 	for (int i = 0; i < count; i++)
 	{
-		WTsum+=arr[i]->getwaittime();
-		STsum+=arr[i]->getservicetime();
+		WTsum += arr[i]->getwaittime();
+		STsum += arr[i]->getservicetime();
 	}
 	avgWT = (WTsum) / float(count);
 	avgST = (STsum) / float(count);
 }
 
 
-void Restaurant:: shellSort(Order * arr[], int n)
+void Restaurant::shellSort(Order* arr[], int n)
 {
 	// Start with a big gap, then reduce the gap 
 	for (int gap = n / 2; gap > 0; gap /= 2)
@@ -1043,7 +1107,7 @@ void Restaurant:: shellSort(Order * arr[], int n)
 			// shift earlier gap-sorted elements up until the correct  
 			// location for a[i] is found 
 			int j;
-			for (j = i; j >= gap && ( arr[j - gap]->getservicetime() > temp->getservicetime()) ; j -= gap)
+			for (j = i; j >= gap && (arr[j - gap]->getservicetime() > temp->getservicetime()); j -= gap)
 				arr[j] = arr[j - gap];
 
 			//  put temp (the original a[i]) in its correct location 

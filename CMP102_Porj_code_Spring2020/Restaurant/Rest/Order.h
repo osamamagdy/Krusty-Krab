@@ -35,6 +35,9 @@ protected:
 	static int Waiting_Vorder;
 	static int Waiting_Norder;
 	static int Waiting_Gorder;
+	static int Served_Vorder;
+	static int Served_Norder;
+	static int Served_Gorder;
 
 public:
 	Order(int ID, ORD_TYPE r_Type);
@@ -102,6 +105,12 @@ public:
 	static int get_waiting_Vorder();
 	static int get_waiting_Norder();
 	static int get_waiting_Gorder();
+	static void set_Served_Vorder(int num);
+	static void set_Served_Norder(int num);
+	static void set_Served_Gorder(int num);
+	static int get_Served_Vorder();
+	static int get_Served_Norder();
+	static int get_Served_Gorder();
 
 };
 

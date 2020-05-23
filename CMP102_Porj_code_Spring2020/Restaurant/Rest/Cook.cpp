@@ -6,7 +6,11 @@ int Cook::RstPrd = 0;
 int Cook::Vcount = 0;
 int Cook::Gcount = 0;
 int Cook::Ncount = 0;
+int Cook::Available_Vcount = 0;
+int Cook::Available_Gcount = 0;
+int Cook::Available_Ncount = 0;
 int Cook::num_injure_cook = 0;
+
 
 Cook::Cook()
 {
@@ -151,6 +155,38 @@ int Cook::GetGcount()
 {
 	return Gcount;
 }
+
+
+void Cook::setAvailableVcount(int count)
+{
+	Available_Vcount = count;
+}
+
+void Cook::setAvailableNcount(int count)
+{
+	Available_Ncount = count;
+}
+
+void Cook::setAvailableGcount(int count)
+{
+	Available_Gcount = count;
+}
+
+int Cook::GetAvailableVcount()
+{
+	return Available_Vcount;
+}
+
+int Cook::GetAvailableNcount()
+{
+	return Available_Ncount;
+}
+
+int Cook::GetAvailableGcount()
+{
+	return Available_Gcount;
+}
+
 
 int Cook::Getcookscount()
 {

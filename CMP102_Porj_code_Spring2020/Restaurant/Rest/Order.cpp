@@ -14,6 +14,9 @@ int Order::VIP_WT = 0;
 int Order::Waiting_Gorder = 0;
 int Order::Waiting_Norder = 0;
 int Order::Waiting_Vorder = 0;
+int Order::Served_Gorder = 0;
+int Order::Served_Norder = 0;
+int Order::Served_Vorder = 0;
 
 Order::Order(int id, ORD_TYPE r_Type)
 {
@@ -285,6 +288,40 @@ int Order::get_waiting_Gorder()
 {
 	return Waiting_Gorder;
 }
+
+
+void Order::set_Served_Vorder(int num)
+{
+	Served_Vorder = num;
+}
+
+void Order::set_Served_Norder(int num)
+{
+	Served_Norder = num;
+}
+
+void Order::set_Served_Gorder(int num)
+{
+	Served_Gorder = num;
+}
+
+int Order::get_Served_Vorder()
+{
+	return Served_Vorder;
+}
+
+int Order::get_Served_Norder()
+{
+	return Served_Norder;
+}
+
+int Order::get_Served_Gorder()
+{
+	return Served_Gorder;
+}
+
+
+
 
 
 void Order::setOrderscount(int num)

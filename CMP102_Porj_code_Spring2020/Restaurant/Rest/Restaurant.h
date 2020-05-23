@@ -71,13 +71,13 @@ public:
 
 	void FillDrawingList();
 	void autopormotedForNormal(int time);
-	void urgentForVIP(int timestep);
+	void urgentForVIP(int timestep, string& msg);
 
-	bool assignOrderVIP(int timestep);
-	bool assignOrderVegan(int timestep);
-	bool assignOrderNormal(int timestep);
-	bool assignOrderInjured(int timestep, Order* orderptr); // is it by reference or value?
-	bool assignOrderBreak(int timestep, Order* orderptr);
+	bool assignOrderVIP(int timestep , string & msg);
+	bool assignOrderVegan(int timestep, string& msg);
+	bool assignOrderNormal(int timestep, string& msg );
+	bool assignOrderInjured(int timestep, Order* orderptr, string& msg); // is it by reference or value?
+	bool assignOrderBreak(int timestep, Order* orderptr, string& msg);
 	void assignOrdertofinish(int timestep);
 	void checkunavailblecooks(int timestep);
 	//for output file 
