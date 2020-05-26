@@ -64,7 +64,7 @@ void Restaurant::Restaurant_modes(int mode)
 		PlaySound(TEXT("family.wav"), NULL, SND_SYNC);
 		break;
 	}
-	while (!EventsQueue.isEmpty() || Order::getordercount() != Order::getFinishedOrdersCount())
+	while (!EventsQueue.isEmpty() || !Vorders.isEmpty() || !Norders.isEmpty() || !Gorders.isEmpty() || !prepare_Order.isEmpty())
 	{
 
 		string masg4 = "";
