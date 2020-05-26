@@ -3,6 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include<Windows.h>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
 using namespace std;
 
 #include "Restaurant.h"
@@ -50,12 +53,15 @@ void Restaurant::Restaurant_modes(int mode)
 	{
 	case 0:
 		pGUI->PrintMessage("Welcome To our Restaurant in interactive Mode.... ");
+		PlaySound(TEXT("new_cook.wav"), NULL, SND_SYNC);
 		break;
 	case 1:
 		pGUI->PrintMessage("Welcome To our Restaurant in step-by-step  Mode.... ");
+		PlaySound(TEXT("famous.wav"), NULL, SND_SYNC);
 		break;
 	case 2:
 		pGUI->PrintMessage("Welcome To our Restaurant in silent mode  Mode....");
+		PlaySound(TEXT("family.wav"), NULL, SND_SYNC);
 		break;
 	}
 	while (!EventsQueue.isEmpty() || Order::getordercount() != Order::getFinishedOrdersCount())
