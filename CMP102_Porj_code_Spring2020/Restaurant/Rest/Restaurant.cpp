@@ -52,15 +52,15 @@ void Restaurant::Restaurant_modes(int mode)
 	switch (mode)
 	{
 	case 0:
-		pGUI->PrintMessage("Welcome To our Restaurant in interactive Mode.... ");
+		pGUI->PrintMessage("Welcome To Craspy Crabs Restaurant in interactive Mode.... ");
 		PlaySound(TEXT("new_cook.wav"), NULL, SND_SYNC);
 		break;
 	case 1:
-		pGUI->PrintMessage("Welcome To our Restaurant in step-by-step  Mode.... ");
+		pGUI->PrintMessage("Welcome To Craspy Crabs Restaurant in step-by-step Mode.... ");
 		PlaySound(TEXT("famous.wav"), NULL, SND_SYNC);
 		break;
 	case 2:
-		pGUI->PrintMessage("Welcome To our Restaurant in silent mode  Mode....");
+		pGUI->PrintMessage("Welcome To Craspy Crabs Restaurant in silent Mode....");
 		PlaySound(TEXT("family.wav"), NULL, SND_SYNC);
 		break;
 	}
@@ -616,9 +616,11 @@ void Restaurant::checkunavailblecooks(int timestep)
 	flag = true;
 	while (!(BreakCooks.isEmpty()) && flag)
 	{
-		BreakCooks.dequeue(the_cook);
+		BreakCooks.peekFront(the_cook);
 		if (the_cook->getTimesteptobeavailabale() == timestep)
 		{
+
+			BreakCooks.dequeue(the_cook);
 			the_cook->setStatus(AVAILABLE);
 			switch (the_cook->GetType())
 			{
@@ -635,7 +637,6 @@ void Restaurant::checkunavailblecooks(int timestep)
 		}
 		else
 		{
-			BreakCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 			flag = false;
 		}
 	}
@@ -648,9 +649,10 @@ void Restaurant::checkunavailblecooks(int timestep)
 	flag = true;
 	while (!(InjuredCooks.isEmpty()) && flag)
 	{
-		InjuredCooks.dequeue(the_cook);
+		InjuredCooks.peekFront(the_cook);
 		if (the_cook->getTimesteptobeavailabale() == timestep)
 		{
+			InjuredCooks.dequeue(the_cook);
 			the_cook->setSpeed(the_cook->getOriginalSpeed());
 			the_cook->setStatus(AVAILABLE);
 			switch (the_cook->GetType())
@@ -668,7 +670,6 @@ void Restaurant::checkunavailblecooks(int timestep)
 		}
 		else
 		{
-			InjuredCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 			flag = false;
 		}
 	}
@@ -733,12 +734,12 @@ void Restaurant::checkunavailblecooks(int timestep)
 			}
 		}
 
-		while (!temp.isEmpty() && temp2.isEmpty())
+		while (!temp.isEmpty() && !temp2.isEmpty())
 		{//the size of temp=temp2 but i do it for every thing may happen
 			temp2.dequeue(the_order);
 			temp.dequeue(the_cook);
 			BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
-			prepare_Order.enqueue(the_order, the_order->getFinshtime());
+			prepare_Order.enqueue(the_order,1000- the_order->getFinshtime());
 		}
 
 
@@ -838,7 +839,7 @@ void Restaurant::loadfile()
 
 	//pointer to base class event 
 	Event* newevent;
-
+	Event** EventArray = new Event* [EventsNum];
 	for (int i = 0; i < EventsNum; i++)
 	{
 		myfile >> EventType;
@@ -880,9 +881,18 @@ void Restaurant::loadfile()
 		}
 
 		}
-		EventsQueue.enqueue(newevent);
+		EventArray[i] = newevent;
+		
+	
+	}
+
+	shellSortEvents(EventArray, EventsNum);
+	for (int i = 0; i < EventsNum; i++)
+	{
+		EventsQueue.enqueue(EventArray[i]);
 
 	}
+	delete[] EventArray;
 	myfile.close();
 
 }
@@ -1130,6 +1140,32 @@ void Restaurant::shellSort(Order* arr[], int n)
 }
 
 
+void Restaurant::shellSortEvents(Event* arr[], int n)
+{
+	// Start with a big gap, then reduce the gap 
+	for (int gap = n / 2; gap > 0; gap /= 2)
+	{
+		// Do a gapped insertion sort for this gap size. 
+		// The first gap elements a[0..gap-1] are already in gapped order 
+		// keep adding one more element until the entire array is 
+		// gap sorted  
+		for (int i = gap; i < n; i += 1)
+		{
+			// add a[i] to the elements that have been gap sorted 
+			// save a[i] in temp and make a hole at position i 
+			Event* temp = arr[i];
+
+			// shift earlier gap-sorted elements up until the correct  
+			// location for a[i] is found 
+			int j;
+			for (j = i; j >= gap && (arr[j - gap]->getEventTime() > temp->getEventTime() ); j -= gap)
+				arr[j] = arr[j - gap];
+
+			//  put temp (the original a[i]) in its correct location 
+			arr[j] = temp;
+		}
+	}
+}
 
 
 

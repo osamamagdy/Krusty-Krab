@@ -88,7 +88,7 @@ public:
 	void outputfile();
 	void getavgSTandWT(Order** arr,int count , float& avgWT, float& avgST);
 	void shellSort(Order* arr[], int n);
-
+	void shellSortEvents(Event* arr[], int n);
 	//
 	// TODO: Add More Member Functions As Needed
 	//
