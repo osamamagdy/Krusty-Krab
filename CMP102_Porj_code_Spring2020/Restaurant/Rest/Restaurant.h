@@ -48,7 +48,7 @@ private:   // We should give here every data member used in the project, remembe
 	PQueue<Cook*>InjuredCooks; // for cooks who are injured
 	
 	PQueue<Cook*>BreakCooks; // for cooks who are in Break
-
+	Queue<Order*>UrgentOrder;
 
 
 	 
@@ -71,8 +71,8 @@ public:
 
 	void FillDrawingList();
 	void autopormotedForNormal(int time);
-	void urgentForVIP(int timestep, string& msg);
-
+	bool urgentForVIP(int timestep, string& msg);
+	void CheckurgentForVIP(int timestep);
 	bool assignOrderVIP(int timestep , string & msg);
 	bool assignOrderVegan(int timestep, string& msg);
 	bool assignOrderNormal(int timestep, string& msg );

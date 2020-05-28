@@ -71,24 +71,29 @@ void Restaurant::Restaurant_modes(int mode)
 		bool Vflag = true;
 		bool Gflag = true;
 		bool Nflag = true;
+		bool Urgentflag = true;
 		ExecuteEvents(timestep);
 		assignOrdertofinish(timestep);
 		checkunavailblecooks(timestep);
-		
-		while (!Vorders.isEmpty() && Vflag)
+		CheckurgentForVIP(timestep);
+		autopormotedForNormal(timestep);
+		while (!UrgentOrder.isEmpty() && Urgentflag)
+		{
+			Urgentflag=urgentForVIP(timestep, masg4);
+		}
+		while (UrgentOrder.isEmpty() &&!Vorders.isEmpty() && Vflag)
 		{
 			Vflag = assignOrderVIP(timestep, masg4);
 		}
-		while (Vorders.isEmpty() && !Gorders.isEmpty() && Gflag)
+		while (UrgentOrder.isEmpty() && Vorders.isEmpty() && !Gorders.isEmpty() && Gflag)
 		{
 			Gflag = assignOrderVegan(timestep, masg4);
 		}
-		while (Vorders.isEmpty() && !Norders.isEmpty() && Nflag)
+		while (UrgentOrder.isEmpty() && Vorders.isEmpty() && !Norders.isEmpty() && Nflag)
 		{
 			Nflag = assignOrderNormal(timestep, masg4);
 		}
-		urgentForVIP(timestep, masg4);
-		autopormotedForNormal(timestep);
+		
 		if (mode == 0 || mode == 1)
 		{
 			if (mode == 0)
@@ -136,7 +141,7 @@ void Restaurant::autopormotedForNormal(int time)
 
 			///////Number of Orders
 			Order::setNOrderscount(Order::getNordercount() - 1);
-
+			
 			Order::setVOrderscount(Order::getVordercount() + 1);
 
 			ptr->set_time_when_became_VIP(time);
@@ -150,10 +155,31 @@ void Restaurant::autopormotedForNormal(int time)
 	}
 
 }
-void Restaurant::urgentForVIP(int timestep, string& msg)
+void Restaurant::CheckurgentForVIP(int timestep)
 {
+
 	Queue<Order*> temp;
 	Order* ptr;
+	while (!Vorders.isEmpty())
+	{
+		Vorders.peekFront(ptr);
+		int waitTime = timestep - ptr->get_time_when_became_VIP();
+		int urgentTime = ptr->getVIP_WT();
+		if (waitTime > urgentTime)
+		{
+			Vorders.dequeue(ptr);
+			UrgentOrder.enqueue(ptr);
+		}
+		else
+			break;
+
+
+	}
+
+}
+bool Restaurant::urgentForVIP(int timestep, string& msg)
+{
+	
 
 	/////////////////Should be modified by three possible solutions to reduce complexity///////////////////
 
@@ -204,46 +230,165 @@ void Restaurant::urgentForVIP(int timestep, string& msg)
 
 	*/
 
-	bool flag = true;
-	while (!Vorders.isEmpty() && flag)
+	
+	
+	while (!UrgentOrder.isEmpty())
 	{
-		Vorders.peekFront(ptr);
-		int waitTime = timestep - ptr->get_time_when_became_VIP();
-		int urgentTime = ptr->getVIP_WT();
-		if (waitTime >= urgentTime)
+		if (!Vcooks.isEmpty())
 		{
-			if (!assignOrderVIP(timestep, msg))
-			{
-				if (!assignOrderBreak(timestep, ptr, msg))
-				{
-					if (!assignOrderInjured(timestep, ptr, msg))
-					{
-						flag = false;
-					}
-					else
-					{
-						Order::increase_urgent();
-					}
-				}
-				else
-				{
-					Order::increase_urgent();
-				}
-			}
-			else
-			{
-				Order::increase_urgent();
-			}
+			Order* the_order;
+			Cook* the_cook;
+			//dequeue the cook from cooks queue and dequeue the order from order queue
+			Vcooks.dequeue(the_cook);
+			UrgentOrder.dequeue(the_order);
+			//set order new status and waiting time and calculate service time and assign to preprinng orders
+			the_order->setStatus(SRV);
+			the_order->setwaittime(timestep - the_order->getorderarrivaltime());
+			the_order->setservicetime(the_order->getOrderSize() / the_cook->getspeed());
+			the_order->CalFinish();
+			prepare_Order.enqueue(the_order, 1000 - the_order->getFinshtime());
+			//setting cook information 
+			the_cook->setStatus(BUSY);
+			the_cook->setServedOrder(the_order);
+			the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+			the_cook->CalUnavailabalePriority(/*timestep*/);
+			BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+			Cook::setAvailableVcount(Cook::GetAvailableVcount() - 1);
+			Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
+			msg += "  V" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+			
+			Order::increase_urgent();
 		}
-		else
+		else if (!Ncooks.isEmpty())
 		{
-			flag = false;
+			Order* the_order;
+			Cook* the_cook;
+			Ncooks.dequeue(the_cook);
+			UrgentOrder.dequeue(the_order);
+			//set order new status and waiting time and calculate service time and assign to preprinng orders
+			the_order->setStatus(SRV);
+			the_order->setwaittime(timestep - the_order->getorderarrivaltime());
+			the_order->setservicetime(the_order->getOrderSize() / the_cook->getspeed());
+			the_order->CalFinish();
+			prepare_Order.enqueue(the_order, 1000 - the_order->getFinshtime());
+			//setting cook information 
+			the_cook->setStatus(BUSY);
+			the_cook->setServedOrder(the_order);
+			the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+			the_cook->CalUnavailabalePriority(/*timestep*/);
+			BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+			Cook::setAvailableNcount(Cook::GetAvailableNcount() - 1);
+			Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
+			msg += "  N" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+		
+			Order::increase_urgent();
 		}
+		else if (!Gcooks.isEmpty())
+		{
+			Order* the_order;
+			Cook* the_cook;
+			Gcooks.dequeue(the_cook);
+			UrgentOrder.dequeue(the_order);
+			//set order new status and waiting time and calculate service time and assign to preprinng orders
+			the_order->setStatus(SRV);
+			the_order->setwaittime(timestep - the_order->getorderarrivaltime());
+			the_order->setservicetime(the_order->getOrderSize() / the_cook->getspeed());
+			the_order->CalFinish();
+			prepare_Order.enqueue(the_order, 1000 - the_order->getFinshtime());
+			//setting cook information 
+			the_cook->setStatus(BUSY);
+			the_cook->setServedOrder(the_order);
+			the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+			the_cook->CalUnavailabalePriority(/*timestep*/);
+			BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+			Cook::setAvailableGcount(Cook::GetAvailableGcount() - 1);
+			Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
+			msg += "  G" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+			
+			Order::increase_urgent();
+		}
+		else if (!BreakCooks.isEmpty())
+		{
+			Order* the_order;
+			Cook* the_cook;
+			BreakCooks.dequeue(the_cook);
+
+
+			UrgentOrder.dequeue(the_order);
+
+			the_order->setStatus(SRV);
+			the_order->setwaittime(timestep - the_order->getorderarrivaltime());
+			the_order->setservicetime(the_order->getOrderSize() / the_cook->getspeed());
+			the_order->CalFinish();
+			prepare_Order.enqueue(the_order, 1000 - the_order->getFinshtime());
+			//setting cook information 
+			the_cook->setStatus(BUSY);
+			the_cook->setServedOrder(the_order);
+			the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+			the_cook->CalUnavailabalePriority(/*timestep*/);
+			BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+
+			switch (the_cook->GetType())
+			{
+			case TYPE_NRM:
+				msg += " N" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+				break;
+			case TYPE_VIP:
+				msg += " V" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+				break;
+			case TYPE_VGAN:
+				msg += " G" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+				break;
+			}
+
+			
+			Order::increase_urgent();
+		}
+		else if (!InjuredCooks.isEmpty())
+	{
+	    Order* the_order;
+	     Cook* the_cook;
+		InjuredCooks.dequeue(the_cook);
+		UrgentOrder.dequeue(the_order);
+		the_order->setStatus(SRV);
+		the_order->setwaittime(timestep - the_order->getorderarrivaltime());
+		the_order->setservicetime(the_order->getOrderSize() / the_cook->getspeed());
+		the_order->CalFinish();
+		prepare_Order.enqueue(the_order, 1000 - the_order->getFinshtime());
+		//setting cook information 
+		the_cook->setStatus(BUSY);
+		the_cook->setServedOrder(the_order);
+		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->CalUnavailabalePriority(/*timestep*/);
+		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
+
+		switch (the_cook->GetType())
+		{
+		case TYPE_NRM:
+			msg += " N" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+			break;
+		case TYPE_VIP:
+			msg += " V" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+			break;
+		case TYPE_VGAN:
+			msg += " G" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
+			break;
+			
+		}
+		
+		Order::increase_urgent();
+
 	}
+		else
+		return false;
+	
 
-
-
+ 
+	}
+	
+		return true;
 }
+
 
 bool Restaurant::assignOrderVIP(int timestep, string& msg)
 {
