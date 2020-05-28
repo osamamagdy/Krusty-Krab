@@ -204,7 +204,15 @@ void Order::setwaittime(int time)
 
 void Order::setservicetime(int time)
 {
-	ServTime = time;
+	if (time >=1)
+	{
+
+		ServTime = time;
+	}
+	else
+	{
+		ServTime = 1;
+	}
 }
 
 

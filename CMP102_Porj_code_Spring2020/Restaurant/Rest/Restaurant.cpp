@@ -64,7 +64,7 @@ void Restaurant::Restaurant_modes(int mode)
 		PlaySound(TEXT("family.wav"), NULL, SND_SYNC);
 		break;
 	}
-	while (!EventsQueue.isEmpty() || !Vorders.isEmpty() || !Norders.isEmpty() || !Gorders.isEmpty() || !prepare_Order.isEmpty())
+	while (!EventsQueue.isEmpty() || !Vorders.isEmpty() || !Norders.isEmpty() || !Gorders.isEmpty() || !prepare_Order.isEmpty() || !BusyCooks.isEmpty() || !InjuredCooks.isEmpty() || !BreakCooks.isEmpty())
 	{
 
 		string masg4 = "";
@@ -252,7 +252,7 @@ bool Restaurant::urgentForVIP(int timestep, string& msg)
 			//setting cook information 
 			the_cook->setStatus(BUSY);
 			the_cook->setServedOrder(the_order);
-			the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+			the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
 			the_cook->CalUnavailabalePriority(/*timestep*/);
 			BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 			Cook::setAvailableVcount(Cook::GetAvailableVcount() - 1);
@@ -276,7 +276,7 @@ bool Restaurant::urgentForVIP(int timestep, string& msg)
 			//setting cook information 
 			the_cook->setStatus(BUSY);
 			the_cook->setServedOrder(the_order);
-			the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+			the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
 			the_cook->CalUnavailabalePriority(/*timestep*/);
 			BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 			Cook::setAvailableNcount(Cook::GetAvailableNcount() - 1);
@@ -300,7 +300,7 @@ bool Restaurant::urgentForVIP(int timestep, string& msg)
 			//setting cook information 
 			the_cook->setStatus(BUSY);
 			the_cook->setServedOrder(the_order);
-			the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+			the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
 			the_cook->CalUnavailabalePriority(/*timestep*/);
 			BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 			Cook::setAvailableGcount(Cook::GetAvailableGcount() - 1);
@@ -347,7 +347,7 @@ bool Restaurant::assignOrderVIP(int timestep, string& msg)
 		//setting cook information 
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
-		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Cook::setAvailableVcount(Cook::GetAvailableVcount() - 1);
@@ -370,7 +370,7 @@ bool Restaurant::assignOrderVIP(int timestep, string& msg)
 		//setting cook information 
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
-		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Cook::setAvailableNcount(Cook::GetAvailableNcount() - 1);
@@ -393,7 +393,7 @@ bool Restaurant::assignOrderVIP(int timestep, string& msg)
 		//setting cook information 
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
-		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Cook::setAvailableGcount(Cook::GetAvailableGcount() - 1);
@@ -420,7 +420,7 @@ bool Restaurant::assignOrderVegan(int timestep, string& msg)
 		//setting cooks informations
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
-		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Cook::setAvailableGcount(Cook::GetAvailableGcount() - 1);
@@ -447,7 +447,7 @@ bool Restaurant::assignOrderNormal(int timestep, string& msg)
 		//setting cook informations 
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
-		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Cook::setAvailableNcount(Cook::GetAvailableNcount() - 1);
@@ -470,7 +470,7 @@ bool Restaurant::assignOrderNormal(int timestep, string& msg)
 		//setting cook informations 
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
-		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Cook::setAvailableVcount(Cook::GetAvailableVcount() - 1);
@@ -507,7 +507,7 @@ bool Restaurant::assignOrderInjured(int timestep, Order* the_order, string& msg)
 		//setting cook information 
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
-		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
@@ -549,7 +549,7 @@ bool Restaurant::assignOrderBreak(int timestep, Order* the_order, string& msg)
 		//setting cook information 
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
-		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
+		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
@@ -709,12 +709,15 @@ void Restaurant::checkunavailblecooks(int timestep)
 			switch (the_cook->GetType())
 			{
 			case TYPE_NRM:
+				Cook::setAvailableNcount(Cook::GetAvailableNcount() + 1);
 				Ncooks.enqueue(the_cook, the_cook->getspeed());
 				break;
 			case TYPE_VGAN:
+				Cook::setAvailableGcount(Cook::GetAvailableGcount() + 1);
 				Gcooks.enqueue(the_cook, the_cook->getspeed());
 				break;
 			case TYPE_VIP:
+				Cook::setAvailableVcount(Cook::GetAvailableVcount() + 1);
 				Vcooks.enqueue(the_cook, the_cook->getspeed());
 				break;
 			}
@@ -742,12 +745,15 @@ void Restaurant::checkunavailblecooks(int timestep)
 			switch (the_cook->GetType())
 			{
 			case TYPE_NRM:
+				Cook::setAvailableNcount(Cook::GetAvailableNcount() + 1);
 				Ncooks.enqueue(the_cook, the_cook->getspeed());
 				break;
 			case TYPE_VGAN:
+				Cook::setAvailableGcount(Cook::GetAvailableGcount() + 1);
 				Gcooks.enqueue(the_cook, the_cook->getspeed());
 				break;
 			case TYPE_VIP:
+				Cook::setAvailableVcount(Cook::GetAvailableVcount() + 1);
 				Vcooks.enqueue(the_cook, the_cook->getspeed());
 				break;
 			}
