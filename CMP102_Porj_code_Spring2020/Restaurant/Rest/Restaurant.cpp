@@ -234,6 +234,8 @@ bool Restaurant::urgentForVIP(int timestep, string& msg)
 	
 	while (!UrgentOrder.isEmpty())
 	{
+		Order* ptr;
+		UrgentOrder.peekFront(ptr);
 		if (!Vcooks.isEmpty())
 		{
 			Order* the_order;
@@ -307,77 +309,14 @@ bool Restaurant::urgentForVIP(int timestep, string& msg)
 			
 			Order::increase_urgent();
 		}
-		else if (!BreakCooks.isEmpty())
+		else if (assignOrderBreak(timestep, ptr, msg))
 		{
-			Order* the_order;
-			Cook* the_cook;
-			BreakCooks.dequeue(the_cook);
-
-
-			UrgentOrder.dequeue(the_order);
-
-			the_order->setStatus(SRV);
-			the_order->setwaittime(timestep - the_order->getorderarrivaltime());
-			the_order->setservicetime(the_order->getOrderSize() / the_cook->getspeed());
-			the_order->CalFinish();
-			prepare_Order.enqueue(the_order, 1000 - the_order->getFinshtime());
-			//setting cook information 
-			the_cook->setStatus(BUSY);
-			the_cook->setServedOrder(the_order);
-			the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
-			the_cook->CalUnavailabalePriority(/*timestep*/);
-			BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
-
-			switch (the_cook->GetType())
-			{
-			case TYPE_NRM:
-				msg += " N" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
-				break;
-			case TYPE_VIP:
-				msg += " V" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
-				break;
-			case TYPE_VGAN:
-				msg += " G" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
-				break;
-			}
-
-			
 			Order::increase_urgent();
 		}
-		else if (!InjuredCooks.isEmpty())
+		else if (assignOrderInjured(timestep, ptr, msg))
 	{
-	    Order* the_order;
-	     Cook* the_cook;
-		InjuredCooks.dequeue(the_cook);
-		UrgentOrder.dequeue(the_order);
-		the_order->setStatus(SRV);
-		the_order->setwaittime(timestep - the_order->getorderarrivaltime());
-		the_order->setservicetime(the_order->getOrderSize() / the_cook->getspeed());
-		the_order->CalFinish();
-		prepare_Order.enqueue(the_order, 1000 - the_order->getFinshtime());
-		//setting cook information 
-		the_cook->setStatus(BUSY);
-		the_cook->setServedOrder(the_order);
-		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
-		the_cook->CalUnavailabalePriority(/*timestep*/);
-		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
-
-		switch (the_cook->GetType())
-		{
-		case TYPE_NRM:
-			msg += " N" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
-			break;
-		case TYPE_VIP:
-			msg += " V" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
-			break;
-		case TYPE_VGAN:
-			msg += " G" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
-			break;
-			
-		}
-		
-		Order::increase_urgent();
-
+	    
+			Order::increase_urgent();
 	}
 		else
 		return false;
@@ -559,7 +498,7 @@ bool Restaurant::assignOrderInjured(int timestep, Order* the_order, string& msg)
 	if (!InjuredCooks.isEmpty())
 	{
 		InjuredCooks.dequeue(the_cook);
-		Vorders.dequeue(the_order);
+		UrgentOrder.dequeue(the_order);
 		the_order->setStatus(SRV);
 		the_order->setwaittime(timestep - the_order->getorderarrivaltime());
 		the_order->setservicetime(the_order->getOrderSize() / the_cook->getspeed());
@@ -571,7 +510,7 @@ bool Restaurant::assignOrderInjured(int timestep, Order* the_order, string& msg)
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
-
+		Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
 		switch (the_cook->GetType())
 		{
 		case TYPE_NRM:
@@ -600,7 +539,7 @@ bool Restaurant::assignOrderBreak(int timestep, Order* the_order, string& msg)
 		BreakCooks.dequeue(the_cook);
 
 
-		Vorders.dequeue(the_order);
+		UrgentOrder.dequeue(the_order);
 
 		the_order->setStatus(SRV);
 		the_order->setwaittime(timestep - the_order->getorderarrivaltime());
@@ -613,7 +552,7 @@ bool Restaurant::assignOrderBreak(int timestep, Order* the_order, string& msg)
 		the_cook->setTimesteptobeavailabale(the_order->getOrderSize() / the_cook->getspeed() + timestep);
 		the_cook->CalUnavailabalePriority(/*timestep*/);
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
-
+		Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
 		switch (the_cook->GetType())
 		{
 		case TYPE_NRM:
