@@ -42,6 +42,7 @@ void Restaurant::RunSimulation()
 
 
 	};
+	PlaySound(TEXT("good_bye.wav"), NULL, SND_SYNC);
 	outputfile();
 
 }
