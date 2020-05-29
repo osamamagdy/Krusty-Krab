@@ -1270,22 +1270,26 @@ void Restaurant::Seacrh(int ID, Order*& frntEntry)
 {
 	Queue<Order*> qtemp;
 	Order* Otemp;
-	bool flag = true;
+	
 	//search about order
-	while (flag && Norders.dequeue(Otemp) )
+	while (!Norders.isEmpty())
 	{
+		Norders.dequeue(Otemp);
 		if (Otemp->GetID() != ID)
 			qtemp.enqueue(Otemp);
 		else
 		{
 			frntEntry = Otemp;
-			flag = false;
+			
 		}
 
 	}
 
-	while (qtemp.dequeue(Otemp))
-		Norders.enqueue(Otemp);
+	while (!qtemp.isEmpty())
+	{
+		qtemp.dequeue(Otemp);
+			Norders.enqueue(Otemp);
+	}
 }
 
 void Restaurant::outputfile()
