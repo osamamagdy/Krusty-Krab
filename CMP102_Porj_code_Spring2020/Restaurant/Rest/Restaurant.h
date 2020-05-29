@@ -65,7 +65,7 @@ public:
 	void ExecuteEvents(int TimeStep);	//executes all events at current timestep
 	void RunSimulation();
 	void AddOrders(Order* po);
-	void loadfile();
+	bool loadfile();
 	void Restaurant_modes(int mode);
 	void Seacrh( int ID, Order  *&frntEntry);
 

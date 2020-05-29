@@ -15,6 +15,7 @@ class Cook
 	static float InjProp ;
 	static int RstPrd;
 	int Unavailabalepriority, availabalepriority, Injuredpriority, N_orders_Finished, Timesteptobeavailabale;
+	bool IsInjured;
 	
 	Order* ServedOrder; 
 	
@@ -62,6 +63,10 @@ public:
 
 	void setOriginalSpeed(int sp);
 	int getOriginalSpeed();
+
+	void set_isinjured(bool val);
+	bool get_isinjured();
+
 
 	//output file member func
 	static void setVcount(int count);

@@ -42,6 +42,9 @@ Order::Order(int id, ORD_TYPE r_Type)
 	}
 
 
+	ServTime = 0;
+	WaitTime = 0;
+	FinishTime = 0;
 }
 
 
@@ -90,7 +93,10 @@ Order::Order(int id, ORD_TYPE r_Type, double money, int size, int timestep)
 		time_when_became_VIP = timestep;
 		break;
 	}
-
+	
+	ServTime = 0;
+	WaitTime = 0;
+	FinishTime = 0;
 	
 }
 void Order::SetType(ORD_TYPE type)

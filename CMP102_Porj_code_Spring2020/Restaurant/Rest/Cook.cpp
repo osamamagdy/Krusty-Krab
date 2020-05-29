@@ -14,6 +14,7 @@ int Cook::num_injure_cook = 0;
 
 Cook::Cook()
 {
+	IsInjured = false;
 	N_orders_Finished = 0;
 }
 
@@ -234,3 +235,13 @@ void Cook::setServedOrder(Order* Served)
 	ServedOrder = Served;
 }
 
+
+void Cook:: set_isinjured(bool val)
+{
+	IsInjured = val;
+}
+
+bool Cook :: get_isinjured()
+{
+	return IsInjured;
+}
