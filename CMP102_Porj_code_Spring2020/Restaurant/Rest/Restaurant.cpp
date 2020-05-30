@@ -150,7 +150,7 @@ void Restaurant::autopormotedForNormal(int time)
 		Norders.peekFront(ptr);
 		int waitTime = time - ptr->getorderarrivaltime();
 		int prmotedTime = ptr->GetAUto();
-		if (waitTime >= prmotedTime)
+		if (waitTime > prmotedTime)
 		{
 			Norders.dequeue(ptr);
 			ptr->SetType(TYPE_VIP);
