@@ -55,6 +55,16 @@ void Restaurant::RunSimulation()
 
 
 	};
+	if (!Gorders.isEmpty())
+	{
+		pGUI->PrintMessage("You don't have vegan Cooks, So the restaurant didn't prepera any vegan orders");
+		Sleep(1000);
+	}
+	if (!Norders.isEmpty())
+	{
+		pGUI->PrintMessage("You don't have VIP and Normal Cooks, So the restaurant didn't prepera any Normal orders");
+		Sleep(1000);
+	}
 	PlaySound(TEXT("good_bye.wav"), NULL, SND_SYNC);
 	outputfile();
 
