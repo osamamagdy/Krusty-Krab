@@ -1318,11 +1318,11 @@ void Restaurant::outputfile()
 	myfile << "Orders: " << Order::getordercount() << " [Norm:" << Order::getNordercount();
 	myfile << ", Veg:" << Order::getGordercount() << ", VIP:" << Order::getVordercount() << "]\n";
 	//writing num of all cooks and num of all types of cooks
-	myfile << "cooks: " << Cook::Getcookscount() << " [Norm:" << Cook::GetNcount() << ", Veg:" << Cook::GetGcount() << ", VIP" << Cook::GetVcount();
+	myfile << "cooks: " << Cook::Getcookscount() << " [Norm:" << Cook::GetNcount() << ", Veg:" << Cook::GetGcount() << ", VIP:" << Cook::GetVcount();
 	myfile << ", injured:" << Cook::get_num_of_injury() << "]" << "\n";
 	//getting avg of 
 	myfile << "Avg Wait = " << AvgWT << ",  Avg Serv = " << AvgST << "\n";
-	myfile << " Urgent orders : " << Order::get_Urgent_num() << ", Auto - promoted :" << Order::Get_num_of_order_auto_P() << "\n";
+	myfile << "Urgent orders : " << Order::get_Urgent_num() << ", Auto - promoted :" << Order::Get_num_of_order_auto_P() << "\n";
 }
 
 void Restaurant::getavgSTandWT(Order** arr, int count, float& avgWT, float& avgST)
