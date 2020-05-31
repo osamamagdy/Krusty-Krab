@@ -27,7 +27,8 @@ void Restaurant::RunSimulation()
 	pGUI = new GUI;
 	if (!loadfile())
 	{
-		Sleep(5000);
+		pGUI->PrintMessage("Couldn't find this file");
+		Sleep(2000);
 		return;
 	}
 	if (Vcooks.isEmpty() && Gcooks.isEmpty() && Ncooks.isEmpty())
@@ -55,6 +56,16 @@ void Restaurant::RunSimulation()
 
 
 	};
+	if (!Gorders.isEmpty())
+	{
+		pGUI->PrintMessage("You don't have vegan Cooks, So the restaurant didn't prepera any vegan orders");
+		Sleep(1000);
+	}
+	if (!Norders.isEmpty())
+	{
+		pGUI->PrintMessage("You don't have VIP and Normal Cooks, So the restaurant didn't prepera any Normal orders");
+		Sleep(1000);
+	}
 	PlaySound(TEXT("good_bye.wav"), NULL, SND_SYNC);
 	outputfile();
 
@@ -150,7 +161,7 @@ void Restaurant::autopormotedForNormal(int time)
 		Norders.peekFront(ptr);
 		int waitTime = time - ptr->getorderarrivaltime();
 		int prmotedTime = ptr->GetAUto();
-		if (waitTime >= prmotedTime)
+		if (waitTime > prmotedTime)
 		{
 			Norders.dequeue(ptr);
 			ptr->SetType(TYPE_VIP);
@@ -618,7 +629,7 @@ void Restaurant::assignOrdertofinish(int timestep)
 	{
 		prepare_Order.peekFront(the_order);
 		the_order->CalFinish();
-		if (the_order->getFinshtime() == timestep)
+		if (the_order->getFinshtime() <= timestep)
 		{
 			prepare_Order.dequeue(the_order);
 
@@ -821,7 +832,7 @@ void Restaurant::checkunavailblecooks(int timestep)
 				
 				
 
-
+				/*
 				if (the_order != the_cook->getServedOrder())
 				{
 					///////////This case shouldn't happen so i will make it an error to be obvious to correct in the coming cases
@@ -831,6 +842,12 @@ void Restaurant::checkunavailblecooks(int timestep)
 					}
 					/////// The first cook in BusyCooks should have the first order in prepare_Order
 				}
+				*/
+
+
+
+
+
 				int remaining_time_for_serving = the_cook->getTimesteptobeavailabale() - timestep;
 
 				///////////////////this should be equal to : the_order->getFinishtime() - timestep;
@@ -1149,11 +1166,11 @@ Restaurant::~Restaurant()
 
 void Restaurant::FillDrawingList()
 {
-	int  VOrdersCount, NOrdersCount, GOrdersCount;
+	int  VOrdersCount, NOrdersCount, GOrdersCount, UrgentOrdersCount;
 	VOrdersCount = 0;
 	NOrdersCount = 0;
 	GOrdersCount = 0;
-
+	UrgentOrdersCount = 0;
 	int  VCooksCount, NCooksCount, GCooksCount, ServOrder, Doneorder;
 	VCooksCount = 0;
 	NCooksCount = 0;
@@ -1168,6 +1185,7 @@ void Restaurant::FillDrawingList()
 	Order** Vorderscopy = Vorders.toArray(VOrdersCount);
 	Order** Norderscopy = Norders.toArray(NOrdersCount);
 	Order** Gorderscopy = Gorders.toArray(GOrdersCount);
+	Order** Urgentorderscopy = UrgentOrder.toArray(UrgentOrdersCount);
 	Order::set_waiting_Gorder(GOrdersCount);
 	Order::set_waiting_Norder(NOrdersCount);
 	Order::set_waiting_Vorder(VOrdersCount);
@@ -1183,6 +1201,13 @@ void Restaurant::FillDrawingList()
 	{
 		pGUI->AddToDrawingList(Vorderscopy[i]);
 	}
+
+	///////////////Drawing VIP Urgent Orders ///////////////
+	for (int i = 0; i < UrgentOrdersCount; i++)
+	{
+		pGUI->AddToDrawingList(Urgentorderscopy[i]);
+	}
+
 
 	///////////////Drawing Normal Orders ///////////////
 	for (int i = 0; i < NOrdersCount; i++)
