@@ -17,8 +17,7 @@ protected:
 	int ArrTime, ServTime, FinishTime;	//arrival, service start, and finish times
 	static int VIP_WT;
 	static int orderpromted;
-	//
-	// TODO: Add More Data Members As Needed
+	
 
 	int WaitTime;  // The time the order waits before bieng assigned to the cook
 	int OrderSize; // How many Dishes in the order
@@ -50,19 +49,13 @@ public:
 	virtual ~Order();
 
 	int GetID();
-
 	ORD_TYPE GetType() const;
-
-	void setStatus(ORD_STATUS s);
+    void setStatus(ORD_STATUS s);
 	ORD_STATUS getStatus() const;
 	static void SetVIP_WT(int vip);
 	static int getVIP_WT();
-	//
-	// TODO: Add More Member Functions As Needed
-
 	void CalPriority();
 	int getPriority();
-
 	void SetArr(int timestep);
 
 	void IncSer();

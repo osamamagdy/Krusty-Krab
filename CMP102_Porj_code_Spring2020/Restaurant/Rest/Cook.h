@@ -32,9 +32,6 @@ public:
 	virtual ~Cook();
 	int GetID() const;
 	ORD_TYPE GetType() const;
-	//void setID(int);
-	//void setType(ORD_TYPE) ;
-
 	void setSpeed(int s);
 	void setBreakduration(int B);
 	static void setordertobreak(int ordtobreak);
@@ -49,7 +46,7 @@ public:
 	static void  SetInjProp(float i);
 	static float getInjProp();
 	int getBreakduration();
-	void CalUnavailabalePriority(/*int RealTimeStep*/);
+	void CalUnavailabalePriority();
 	int getUnavailabalePriority();
 
 	void setTimesteptobeavailabale(int time);

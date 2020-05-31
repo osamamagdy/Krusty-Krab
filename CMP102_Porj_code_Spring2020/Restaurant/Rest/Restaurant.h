@@ -48,12 +48,11 @@ private:   // We should give here every data member used in the project, remembe
 	PQueue<Cook*>InjuredCooks; // for cooks who are injured
 	
 	PQueue<Cook*>BreakCooks; // for cooks who are in Break
+
 	Queue<Order*>UrgentOrder; // for urgent orders
 
+	PQueue<Order*>  prepare_Order;   //queue for served orders
 
-	 
-
-	PQueue<Order*>  prepare_Order;   //queue for served orders 
 	Queue<Order*> finished_order; //done orders 
 
 	
@@ -80,30 +79,17 @@ public:
 	bool assignOrderBreak(int timestep, Order* orderptr, string& msg);
 	void assignOrdertofinish(int timestep);
 	void checkunavailblecooks(int timestep);
-	//for output file 
-	//algorithms to sort 
 	
-	//void reheapdown(Order **& arr, int n, int root);
-	//void heapSort(Order **& arr, int n);
+	//for output file 
 	void outputfile();
 	void getavgSTandWT(Order** arr,int count , float& avgWT, float& avgST);
 	void shellSort(Order* arr[], int n);
 	void shellSortEvents(Event* arr[], int n);
-	//
-	// TODO: Add More Member Functions As Needed
-	//
-
+	
 
 	
 
 
-
-/// ===================    DEMO-related functions. Should be removed in phases 1&2   ================= 
-
-	//void Just_A_Demo();	//just to show a demo and should be removed in phase1 1 & 2
-	//void AddtoDemoQueue(Order* po);	//adds an order to the demo queue
-
-/// ================================================================================================== 
 
 
 

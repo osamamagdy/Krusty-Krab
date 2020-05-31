@@ -112,14 +112,11 @@ float Cook::getInjProp()
 {
 	return InjProp;
 }
-void Cook::CalUnavailabalePriority(/*int RealTimestep*/)
+void Cook::CalUnavailabalePriority()
 {
 	Unavailabalepriority = 1000 - Timesteptobeavailabale;
 		
-		/*                +(N_orders_Finished/OrderstoBreak)*Breakduration
-		                  +(status/ INJURD)*(Timesteptobeavailabale-RealTimestep)
-		                  +(status / INJURD)*(1-(N_orders_Finished / OrderstoBreak))* RstPrd;
-		*/	
+		
 }
 
 int Cook::getUnavailabalePriority()

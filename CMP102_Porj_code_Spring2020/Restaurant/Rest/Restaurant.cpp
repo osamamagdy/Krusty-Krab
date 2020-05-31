@@ -19,9 +19,6 @@ Restaurant::Restaurant()
 {
 	pGUI = NULL;
 }
-
-
-
 void Restaurant::RunSimulation()
 {
 	pGUI = new GUI;
@@ -42,7 +39,7 @@ void Restaurant::RunSimulation()
 
 	PROG_MODE	mode = pGUI->getGUIMode();
 
-	switch (mode)	//Add a function for each mode in next phases
+	switch (mode)	//switch to choose our mode
 	{
 	case MODE_INTR:
 		Restaurant_modes(0);
@@ -70,7 +67,6 @@ void Restaurant::RunSimulation()
 	outputfile();
 
 }
-
 void Restaurant::Restaurant_modes(int mode)
 {
 	int timestep = 1;
@@ -104,11 +100,17 @@ void Restaurant::Restaurant_modes(int mode)
 		bool Gflag = true;
 		bool Nflag = true;
 		bool Urgentflag = true;
+		//Excute events in each timestep
 		ExecuteEvents(timestep);
+		//assign prepared order to finish
 		assignOrdertofinish(timestep);
+		//check for unavailble cooks 
 		checkunavailblecooks(timestep);
+		//check if there is an urgent vip-order
 		CheckurgentForVIP(timestep);
+		//checking if there is an auto pormoted normal order in this time step
 		autopormotedForNormal(timestep);
+		//start to assign orders according to Orders Service Criteria 
 		while (!UrgentOrder.isEmpty() && Urgentflag)
 		{
 			Urgentflag=urgentForVIP(timestep, masg4);
@@ -125,7 +127,7 @@ void Restaurant::Restaurant_modes(int mode)
 		{
 			Nflag = assignOrderNormal(timestep, masg4);
 		}
-		
+		//applaying different mode 
 		if (mode == 0 || mode == 1)
 		{
 			if (mode == 0)
@@ -145,11 +147,10 @@ void Restaurant::Restaurant_modes(int mode)
 			pGUI->PrintMessage(masg1, masg2, masg3, masg4, masg5);
 		}
 
-
+		//increase our current time step
 		timestep++;
 	}
 }
-
 
 void Restaurant::autopormotedForNormal(int time)
 {
@@ -213,57 +214,7 @@ bool Restaurant::urgentForVIP(int timestep, string& msg)
 {
 	
 
-	/////////////////Should be modified by three possible solutions to reduce complexity///////////////////
 
-
-	/*
-	1 - (Which we decided temporarly to make ) Make the priority Equation for each VIP order depends
-	greetly on the arrival time. So, there is no possible way to consider an Order to be urgent
-	unless it's at the front so we have complexity of one.
-
-
-	2 - (Has More complexity but it's logical for programming concepts) We make our VIP Orders in a sorted linked list depending on the priority equation.
-	We sure have to maintain the order of insertion at the same priority by insertend & deletebeg.
-	But when it comes to Urgent orders we make a search for any waiting time that is greater than the VIP_WT.
-	So, if we found an order like this we delete it from the list regardless of it's position
-
-
-
-	3 - (The first solution to come in mind) Is to empty the whole Queue searching for any order that exceeded the VIP_WAIT
-	and fill the remaining orders again
-
-
-
-	while (!Vorders.isEmpty())
-	{
-		Vorders.dequeue(ptr);
-		int waitTime = timestep - ptr->getorderarrivaltime();
-		int urgentTime = ptr->getVIP_WT();
-		if (waitTime >= urgentTime)
-		{
-			if (!assignOrderVIP(timestep))
-			{
-				if (!assignOrderBreak(timestep, ptr))
-				{
-					if (!assignOrderInjured(timestep, ptr))
-						temp.enqueue(ptr);
-				}
-			}
-		}
-		else
-			temp.enqueue(ptr);
-	}
-	while (!temp.isEmpty())
-	{
-		temp.dequeue(ptr);
-		Vorders.enqueue(ptr, ptr->getPriority());
-	}
-	the_order->setservicetime(  int( ceil(  float (  the_order->getOrderSize()  ) / the_cook->getspeed()  )  ) );
-
-
-	*/
-
-	
 	
 	while (!UrgentOrder.isEmpty())
 	{
@@ -364,7 +315,6 @@ bool Restaurant::urgentForVIP(int timestep, string& msg)
 		return true;
 }
 
-
 bool Restaurant::assignOrderVIP(int timestep, string& msg)
 {
 	if (!Vcooks.isEmpty())
@@ -385,7 +335,7 @@ bool Restaurant::assignOrderVIP(int timestep, string& msg)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
-		the_cook->CalUnavailabalePriority(/*timestep*/);
+		the_cook->CalUnavailabalePriority();
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Cook::setAvailableVcount(Cook::GetAvailableVcount() - 1);
 		Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
@@ -409,7 +359,7 @@ bool Restaurant::assignOrderVIP(int timestep, string& msg)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
-		the_cook->CalUnavailabalePriority(/*timestep*/);
+		the_cook->CalUnavailabalePriority();
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Cook::setAvailableNcount(Cook::GetAvailableNcount() - 1);
 		Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
@@ -433,7 +383,7 @@ bool Restaurant::assignOrderVIP(int timestep, string& msg)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
-		the_cook->CalUnavailabalePriority(/*timestep*/);
+		the_cook->CalUnavailabalePriority();
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Cook::setAvailableGcount(Cook::GetAvailableGcount() - 1);
 		Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
@@ -461,7 +411,7 @@ bool Restaurant::assignOrderVegan(int timestep, string& msg)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
-		the_cook->CalUnavailabalePriority(/*timestep*/);
+		the_cook->CalUnavailabalePriority();
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Cook::setAvailableGcount(Cook::GetAvailableGcount() - 1);
 		Order::set_Served_Gorder(Order::get_Served_Gorder() + 1);
@@ -489,7 +439,7 @@ bool Restaurant::assignOrderNormal(int timestep, string& msg)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
-		the_cook->CalUnavailabalePriority(/*timestep*/);
+		the_cook->CalUnavailabalePriority();
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Cook::setAvailableNcount(Cook::GetAvailableNcount() - 1);
 		Order::set_Served_Norder(Order::get_Served_Norder() + 1);
@@ -513,7 +463,7 @@ bool Restaurant::assignOrderNormal(int timestep, string& msg)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
-		the_cook->CalUnavailabalePriority(/*timestep*/);
+		the_cook->CalUnavailabalePriority();
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Cook::setAvailableVcount(Cook::GetAvailableVcount() - 1);
 		Order::set_Served_Norder(Order::get_Served_Norder() + 1);
@@ -522,16 +472,6 @@ bool Restaurant::assignOrderNormal(int timestep, string& msg)
 	}
 	return false;
 }
-
-
-
-
-
-
-
-
-
-
 bool Restaurant::assignOrderInjured(int timestep, Order* the_order, string& msg)
 {
 	bool IsAssined = false;
@@ -551,7 +491,7 @@ bool Restaurant::assignOrderInjured(int timestep, Order* the_order, string& msg)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
-		the_cook->CalUnavailabalePriority(/*timestep*/);
+		the_cook->CalUnavailabalePriority();
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
 		switch (the_cook->GetType())
@@ -571,7 +511,6 @@ bool Restaurant::assignOrderInjured(int timestep, Order* the_order, string& msg)
 	}
 	return IsAssined;
 }
-
 bool Restaurant::assignOrderBreak(int timestep, Order* the_order, string& msg)
 {
 	bool IsAssined = false;
@@ -594,7 +533,7 @@ bool Restaurant::assignOrderBreak(int timestep, Order* the_order, string& msg)
 		the_cook->setStatus(BUSY);
 		the_cook->setServedOrder(the_order);
 		the_cook->setTimesteptobeavailabale(the_order->getservicetime() + timestep);
-		the_cook->CalUnavailabalePriority(/*timestep*/);
+		the_cook->CalUnavailabalePriority();
 		BusyCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 		Order::set_Served_Vorder(Order::get_Served_Vorder() + 1);
 		switch (the_cook->GetType())
@@ -663,7 +602,6 @@ void Restaurant::assignOrdertofinish(int timestep)
 	FinishedArr = nullptr;
 
 }
-
 void Restaurant::checkunavailblecooks(int timestep)
 {
 
@@ -676,14 +614,15 @@ void Restaurant::checkunavailblecooks(int timestep)
 	flag = true;
 	while (!(BusyCooks.isEmpty()) && flag)
 	{
+		// get the peek of busy cooks queue
 		BusyCooks.peekFront(the_cook);
-
+		//check if he is available now 
 		if (the_cook->getTimesteptobeavailabale() == timestep)
 		{
-
+			
 			BusyCooks.dequeue(the_cook);
 			the_cook->setN_orders_Finished(the_cook->getN_orders_Finished() + 1);
-
+			//check if he is injury
 			if (the_cook->GetStatus() == INJURD)
 			{
 
@@ -697,7 +636,7 @@ void Restaurant::checkunavailblecooks(int timestep)
 				InjuredCooks.enqueue(the_cook, the_cook->getUnavailabalePriority());
 
 			}
-
+			//check if the cook need break
 			else if (the_cook->getN_orders_Finished() >= the_cook->get_order_to_break())
 			{
 				the_cook->setStatus(BREAK);
@@ -895,10 +834,6 @@ void Restaurant::checkunavailblecooks(int timestep)
 	}
 
 }
-
-
-
-
 bool Restaurant::loadfile()
 {
 	int Ncook, Gcook, Vcook, NspeedMin, NspeedMax, GspeedMin, GspeedMax, VspeedMin, VspeedMax, OrdersToBreak, NBreakMin, NBreakMax, GbreakMin, GbreakMax, VbreakMin, VbreakMax, AutoP, EventsNum;
@@ -911,6 +846,7 @@ bool Restaurant::loadfile()
 	float InjProp;
 	ifstream myfile;
 	int temp;
+	//getting file name from user
 	pGUI->PrintMessage("Enter file input name");
 	string file_name = pGUI->GetString();
 
@@ -926,7 +862,7 @@ bool Restaurant::loadfile()
 	myfile >> InjProp >> RstPrd;
 	myfile >> AutoP >> VIP_WT;
 	myfile >> EventsNum;
-	
+	//handling user errors in input file
 	if (NspeedMax<NspeedMin)
 	{
 		temp = NspeedMax;
@@ -1137,8 +1073,6 @@ bool Restaurant::loadfile()
 	return true;
 }
 
-
-
 //////////////////////////////////  Event handling functions   /////////////////////////////
 
 //Executes ALL events that should take place at current timestep
@@ -1156,14 +1090,11 @@ void Restaurant::ExecuteEvents(int CurrentTimeStep)
 	}
 
 }
-
-
 Restaurant::~Restaurant()
 {
 	if (pGUI)
 		delete pGUI;
 }
-
 void Restaurant::FillDrawingList()
 {
 	int  VOrdersCount, NOrdersCount, GOrdersCount, UrgentOrdersCount;
@@ -1177,8 +1108,7 @@ void Restaurant::FillDrawingList()
 	GCooksCount = 0;
 	ServOrder = 0;
 	Doneorder = 0;
-	//This function should be implemented in phase1
-	//It should add ALL orders and Cooks to the drawing list
+	
 	Order* orderptr;
 	Cook* cookptr;
 	//orders copy 
@@ -1262,14 +1192,6 @@ void Restaurant::FillDrawingList()
 
 }
 
-
-
-
-
-
-
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////
 void Restaurant::AddOrders(Order* po)
 {
@@ -1316,7 +1238,6 @@ void Restaurant::Seacrh(int ID, Order*& frntEntry)
 			Norders.enqueue(Otemp);
 	}
 }
-
 void Restaurant::outputfile()
 {
 	//sorting the finish queue 
@@ -1349,7 +1270,6 @@ void Restaurant::outputfile()
 	myfile << "Avg Wait = " << AvgWT << ",  Avg Serv = " << AvgST << "\n";
 	myfile << "Urgent orders : " << Order::get_Urgent_num() << ", Auto - promoted :" << Order::Get_num_of_order_auto_P() << "\n";
 }
-
 void Restaurant::getavgSTandWT(Order** arr, int count, float& avgWT, float& avgST)
 {
 	float WTsum = 0;
@@ -1362,8 +1282,6 @@ void Restaurant::getavgSTandWT(Order** arr, int count, float& avgWT, float& avgS
 	avgWT = (WTsum) / float(count);
 	avgST = (STsum) / float(count);
 }
-
-
 void Restaurant::shellSort(Order* arr[], int n)
 {
 	// Start with a big gap, then reduce the gap 
@@ -1390,8 +1308,6 @@ void Restaurant::shellSort(Order* arr[], int n)
 		}
 	}
 }
-
-
 void Restaurant::shellSortEvents(Event* arr[], int n)
 {
 	// Start with a big gap, then reduce the gap 
@@ -1423,196 +1339,6 @@ void Restaurant::shellSortEvents(Event* arr[], int n)
 
 
 
-
-
-
-
-
-
-/*
-//////////////////////////////////////////////////////////////////////////////////////////////
-/// ==>
-///  DEMO-related functions. Should be removed in phases 1&2
-
-//Begin of DEMO-related functions
-
-//This is just a demo function for project introductory phase
-//It should be removed starting phase 1
-void Restaurant::Just_A_Demo()
-{
-
-	//
-	// THIS IS JUST A DEMO FUNCTION
-	// IT SHOULD BE REMOVED IN PHASE 1 AND PHASE 2
-
-//	int EventCnt;
-//	Order* pOrd;
-//	Event* pEv;
-//	srand(time(NULL));
-//
-//	pGUI->PrintMessage("Just a Demo. Enter EVENTS Count(next phases should read I/P filename):");
-//	EventCnt = atoi(pGUI->GetString().c_str());	//get user input as a string then convert to integer
-//
-//	pGUI->PrintMessage("Generating Events randomly... In next phases, Events should be loaded from a file...CLICK to continue");
-//	pGUI->waitForClick();
-//
-//	//Just for sake of demo, generate some cooks and add them to the drawing list
-//	//In next phases, Cooks info should be loaded from input file
-//	int C_count = 12;
-//	Cook *pC = new Cook[C_count];
-//	int cID = 1;
-//
-//	for(int i=0; i<C_count; i++)
-//	{
-//		cID+= (rand()%15+1);
-//		pC[i].setID(cID);
-//		pC[i].setType((ORD_TYPE)(rand()%TYPE_CNT));
-//	}
-//
-//
-//	int EvTime = 0;
-//
-//	int O_id = 1;
-//
-//	//Create Random events and fill them into EventsQueue
-//	//All generated event will be "ArrivalEvents" for the demo
-//	for(int i=0; i<EventCnt; i++)
-//	{
-//		O_id += (rand()%4+1);
-//		int OType = rand()%TYPE_CNT;	//Randomize order type
-//		EvTime += (rand()%5+1);			//Randomize event time
-//		pEv = new ArrivalEvent(EvTime,O_id,(ORD_TYPE)OType);
-//		EventsQueue.enqueue(pEv);
-//
-//	}
-//
-//	// --->   In next phases, no random generation is done
-//	// --->       EventsQueue should be filled from actual events loaded from input file
-//
-//
-//
-//
-//
-//	//Now We have filled EventsQueue (randomly)
-//	int CurrentTimeStep = 1;
-//
-//
-//	//as long as events queue is not empty yet
-//	while(!EventsQueue.isEmpty())
-//	{
-//		//print current timestep
-//		char timestep[10];
-//		itoa(CurrentTimeStep,timestep,10);
-//		pGUI->PrintMessage(timestep);
-//
-//
-//		//The next line may add new orders to the DEMO_Queue
-//		ExecuteEvents(CurrentTimeStep);	//execute all events at current time step
-//
-//
-///////////////////////////////////////////////////////////////////////////////////////////
-//		/// The next code section should be done through function "FillDrawingList()" once you
-//		/// decide the appropriate list type for Orders and Cooks
-//
-//		//Let's add ALL randomly generated Cooks to GUI::DrawingList
-//		for(int i=0; i<C_count; i++)
-//			pGUI->AddToDrawingList(&pC[i]);
-//
-//		//Let's add ALL randomly generated Ordes to GUI::DrawingList
-//		int size = 0;
-//		//Order** Demo_Orders_Array = DEMO_Queue.toArray(size);
-//
-//		for(int i=0; i<size; i++)
-//		{
-//			pOrd = Demo_Orders_Array[i];
-//			pGUI->AddToDrawingList(pOrd);
-//		}
-///////////////////////////////////////////////////////////////////////////////////////////
-//
-//		pGUI->UpdateInterface();
-//		Sleep(1000);
-//		CurrentTimeStep++;	//advance timestep
-//		pGUI->ResetDrawingList();
-//	}
-//
-//	delete []pC;
-//
-//
-//	pGUI->PrintMessage("generation done, click to END program");
-//	pGUI->waitForClick();
-
-
-}
-////////////////
-
-//void Restaurant::AddtoDemoQueue(Order *pOrd)
-//{
-//	DEMO_Queue.enqueue(pOrd);
-//}
-
-/// ==> end of DEMO-related function
-
-
-
-
-
-void Restaurant::reheapdown(Order**& arr, int n, int root)
-{
-	int largest = root; // root is the largest element
-	int l = 2 * root + 1; // left = 2*root + 1
-	int r = 2 * root + 2; // right = 2*root + 2
-
-	// If left child is larger than root
-	if (l < n && arr[l]->getFinshtime() > arr[largest]->getFinshtime())
-		largest = l;
-
-	//if left child is equal the largest so far
-	if (l < n && arr[l]->getFinshtime() == arr[largest]->getFinshtime())
-		if (arr[l]->getorderarrivaltime() > arr[largest]->getorderarrivaltime())
-			largest = l;
-
-	// If right child is larger than largest so far
-	if (r < n && arr[r]->getFinshtime() > arr[largest]->getFinshtime())
-		largest = r;
-
-	//if right child is equal the largest so far
-	if (r < n && arr[r]->getFinshtime() == arr[largest]->getFinshtime())
-		if (arr[r]->getorderarrivaltime() > arr[largest]->getorderarrivaltime())
-			largest = r;
-	// If largest is not root
-	if (largest != root)
-	{
-		//swap root and largest
-
-		swap(arr[root], arr[largest]);
-
-		// Recursively heapify the sub-tree
-		reheapdown(arr, n, largest);
-	}
-}
-
-void Restaurant::heapSort(Order**& arr, int n)
-{
-	// build heap
-	for (int i = n / 2 - 1; i >= 0; i--)
-		reheapdown(arr, n, i);
-
-	// extracting elements from heap one by one
-	for (int i = n - 1; i >= 0; i--)
-	{
-		// Move current root to end
-		swap(arr[0], arr[i]);
-
-		// again call max heapify on the reduced heap
-		reheapdown(arr, i, 0);
-	}
-}
-
-
-
-
-
-*/
 
 
 
