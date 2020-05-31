@@ -112,19 +112,22 @@ void Restaurant::Restaurant_modes(int mode)
 		autopormotedForNormal(timestep);
 		//start to assign orders according to Orders Service Criteria 
 		while (!UrgentOrder.isEmpty() && Urgentflag)
-		{
+		{ //assgin urgentorder to cook
 			Urgentflag=urgentForVIP(timestep, masg4);
 		}
 		while (UrgentOrder.isEmpty() &&!Vorders.isEmpty() && Vflag)
 		{
+			//assgin VIP ordrer to cook
 			Vflag = assignOrderVIP(timestep, masg4);
 		}
 		while (UrgentOrder.isEmpty() && Vorders.isEmpty() && !Gorders.isEmpty() && Gflag)
 		{
+			//assgin Vegan order to cook
 			Gflag = assignOrderVegan(timestep, masg4);
 		}
 		while (UrgentOrder.isEmpty() && Vorders.isEmpty() && !Norders.isEmpty() && Nflag)
 		{
+			//assgin Noraml order to cook
 			Nflag = assignOrderNormal(timestep, masg4);
 		}
 		//applaying different mode 
@@ -160,12 +163,16 @@ void Restaurant::autopormotedForNormal(int time)
 	while (!Norders.isEmpty() && flag)
 	{
 		Norders.peekFront(ptr);
+	
 		int waitTime = time - ptr->getorderarrivaltime();
 		int prmotedTime = ptr->GetAUto();
+		//check the time if reaches to autp
 		if (waitTime > prmotedTime)
 		{
 			Norders.dequeue(ptr);
+			//change the type
 			ptr->SetType(TYPE_VIP);
+			// add to VIP queue
 			AddOrders(ptr);
 
 			////////Number of auto promoted orders
@@ -198,9 +205,11 @@ void Restaurant::CheckurgentForVIP(int timestep)
 		Vorders.peekFront(ptr);
 		int waitTime = timestep - ptr->get_time_when_became_VIP();
 		int urgentTime = ptr->getVIP_WT();
+		// check the time reaches to urgent
 		if (waitTime > urgentTime)
 		{
 			Vorders.dequeue(ptr);
+			//add the order for Urgent queue
 			UrgentOrder.enqueue(ptr);
 		}
 		else
@@ -221,7 +230,7 @@ bool Restaurant::urgentForVIP(int timestep, string& msg)
 		Order* ptr;
 		UrgentOrder.peekFront(ptr);
 		if (!Vcooks.isEmpty())
-		{
+		{ //assgin the order for VIP COOK
 			Order* the_order;
 			Cook* the_cook;
 			//dequeue the cook from cooks queue and dequeue the order from order queue
@@ -245,9 +254,12 @@ bool Restaurant::urgentForVIP(int timestep, string& msg)
 			msg += "  V" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
 			
 			Order::increase_urgent();
+
+			//count the number of urgent orders
 		}
 		else if (!Ncooks.isEmpty())
 		{
+			// assgin the order for Noraml cook
 			Order* the_order;
 			Cook* the_cook;
 			Ncooks.dequeue(the_cook);
@@ -270,9 +282,11 @@ bool Restaurant::urgentForVIP(int timestep, string& msg)
 			msg += "  N" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
 		
 			Order::increase_urgent();
+			//count the number of urgent orders
 		}
 		else if (!Gcooks.isEmpty())
 		{
+			//assgin order for vegan cook
 			Order* the_order;
 			Cook* the_cook;
 			Gcooks.dequeue(the_cook);
@@ -295,14 +309,16 @@ bool Restaurant::urgentForVIP(int timestep, string& msg)
 			msg += "  G" + to_string(the_cook->GetID()) + "(V" + to_string(the_order->GetID()) + ") ";
 			
 			Order::increase_urgent();
+			//count the number of urgent orders
 		}
 		else if (assignOrderBreak(timestep, ptr, msg))
 		{
+			//assgin order to Break cook
 			Order::increase_urgent();
 		}
 		else if (assignOrderInjured(timestep, ptr, msg))
-	{
-	    
+	{ //assgin order to Injured Cook
+	    //count the number of urgent orders
 			Order::increase_urgent();
 	}
 		else
@@ -771,17 +787,7 @@ void Restaurant::checkunavailblecooks(int timestep)
 				
 				
 
-				/*
-				if (the_order != the_cook->getServedOrder())
-				{
-					///////////This case shouldn't happen so i will make it an error to be obvious to correct in the coming cases
-					while (true)
-					{
-						cout << "in valid";
-					}
-					/////// The first cook in BusyCooks should have the first order in prepare_Order
-				}
-				*/
+				
 
 
 

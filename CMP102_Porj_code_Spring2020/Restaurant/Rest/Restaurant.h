@@ -63,21 +63,21 @@ public:
 	
 	void ExecuteEvents(int TimeStep);	//executes all events at current timestep
 	void RunSimulation();
-	void AddOrders(Order* po);
-	bool loadfile();
-	void Restaurant_modes(int mode);
-	void Seacrh( int ID, Order  *&frntEntry);
+	void AddOrders(Order* po); //add orders in different queues
+	bool loadfile(); // for input file
+	void Restaurant_modes(int mode); // for 3 modes 
+	void Seacrh( int ID, Order  *&frntEntry); //search about noraml order to promote
 
-	void FillDrawingList();
-	void autopormotedForNormal(int time);
-	bool urgentForVIP(int timestep, string& msg);
-	void CheckurgentForVIP(int timestep);
-	bool assignOrderVIP(int timestep , string & msg);
-	bool assignOrderVegan(int timestep, string& msg);
-	bool assignOrderNormal(int timestep, string& msg );
-	bool assignOrderInjured(int timestep, Order* orderptr, string& msg); // is it by reference or value?
-	bool assignOrderBreak(int timestep, Order* orderptr, string& msg);
-	void assignOrdertofinish(int timestep);
+	void FillDrawingList(); //for GUI
+	void autopormotedForNormal(int time); // for auto promotion orders
+	bool urgentForVIP(int timestep, string& msg); // for assgin urgent orders to cook
+	void CheckurgentForVIP(int timestep); //for change the VIP order to urgent order
+	bool assignOrderVIP(int timestep , string & msg); //assgin VIP order to cook
+	bool assignOrderVegan(int timestep, string& msg); //assgin Vegan order to cook
+	bool assignOrderNormal(int timestep, string& msg ); //assgin Noramal order to cook
+	bool assignOrderInjured(int timestep, Order* orderptr, string& msg);  //assgin urgent order to injured cook
+	bool assignOrderBreak(int timestep, Order* orderptr, string& msg); //assgin uregnt order to break cook
+	void assignOrdertofinish(int timestep); // to convert the order for prepare to finishinhg order
 	void checkunavailblecooks(int timestep);
 	
 	//for output file 
