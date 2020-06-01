@@ -938,7 +938,7 @@ bool Restaurant::loadfile()
 		}
 		else
 		{
-			newNcooks[i].setSpeed(NspeedMin + rand() % (NspeedMax - NspeedMin));
+			newNcooks[i].setSpeed(NspeedMin + rand() % (NspeedMax - NspeedMin + 1));
 
 		}
 		newNcooks[i].setOriginalSpeed(newNcooks[i].getspeed());
@@ -950,7 +950,7 @@ bool Restaurant::loadfile()
 		}
 		else
 		{
-			newNcooks[i].setBreakduration(NBreakMin + rand() % (NBreakMax - NBreakMin));
+			newNcooks[i].setBreakduration(NBreakMin + rand() % (NBreakMax - NBreakMin + 1));
 		}
 		newNcooks[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
@@ -965,7 +965,7 @@ bool Restaurant::loadfile()
 		}
 		else
 		{
-			newGcooks[i].setSpeed(GspeedMin + rand() % (GspeedMax - GspeedMin));
+			newGcooks[i].setSpeed(GspeedMin + rand() % (GspeedMax - GspeedMin + 1));
 
 		}
 		newGcooks[i].setOriginalSpeed(newGcooks[i].getspeed());
@@ -978,7 +978,7 @@ bool Restaurant::loadfile()
 		}
 		else
 		{
-			newGcooks[i].setBreakduration(GbreakMin + rand() % (GbreakMax - GbreakMin));
+			newGcooks[i].setBreakduration(GbreakMin + rand() % (GbreakMax - GbreakMin + 1));
 		}
 		newGcooks[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
@@ -994,7 +994,7 @@ bool Restaurant::loadfile()
 		}
 		else
 		{
-			newVcook[i].setSpeed(VspeedMin + rand() % (VspeedMax - VspeedMin));
+			newVcook[i].setSpeed(VspeedMin + rand() % (VspeedMax - VspeedMin + 1));
 		}
 		newVcook[i].setOriginalSpeed(newVcook[i].getspeed());
 		newVcook[i].setType(TYPE_VIP);
@@ -1005,7 +1005,7 @@ bool Restaurant::loadfile()
 		}
 		else
 		{
-			newVcook[i].setBreakduration(VbreakMin + rand() % (VbreakMax - VbreakMin));
+			newVcook[i].setBreakduration(VbreakMin + rand() % (VbreakMax - VbreakMin + 1));
 		}
 		newVcook[i].setID(i + 1);
 		//we should ask for bonous that every cook has different periorty depend on different speed
