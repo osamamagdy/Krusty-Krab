@@ -72,7 +72,7 @@ int Cook::getBreakduration()
 
 void Cook::setordertobreak(int ordtobreak)
 {
-	OrderstoBreak = ordtobreak;
+	OrderstoBreak = ordtobreak > 0 ? ordtobreak : 0;
 }
 
 int Cook::get_order_to_break()
@@ -126,17 +126,21 @@ int Cook::getUnavailabalePriority()
 
 void Cook::setVcount(int count)
 {
-	Vcount = count;
+	if (count > 0)
+		Vcount = count;
+	else
+		Vcount = 0;
 }
 
 void Cook::setNcount(int count)
 {
-	Ncount = count;
+	Ncount = count > 0 ? count : 0;
+
 }
 
 void Cook::setGcount(int count)
 {
-	Gcount = count;
+	Gcount = count > 0 ? count : 0;
 }
 
 int Cook::GetVcount()
@@ -157,17 +161,17 @@ int Cook::GetGcount()
 
 void Cook::setAvailableVcount(int count)
 {
-	Available_Vcount = count;
+	Available_Vcount = count > 0 ? count : 0;
 }
 
 void Cook::setAvailableNcount(int count)
 {
-	Available_Ncount = count;
+	Available_Ncount = count > 0 ? count : 0;
 }
 
 void Cook::setAvailableGcount(int count)
 {
-	Available_Gcount = count;
+	Available_Gcount = count > 0 ? count : 0;
 }
 
 int Cook::GetAvailableVcount()

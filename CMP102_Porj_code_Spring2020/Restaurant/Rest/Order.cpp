@@ -172,7 +172,7 @@ void Order:: CalFinish()
 }
 void Order::SetSize(int size)
 {
-	OrderSize = size;
+	OrderSize = size >0?size:0;
 }
 
 void Order :: AddMoney(double extra)
@@ -182,7 +182,7 @@ void Order :: AddMoney(double extra)
 
 void Order::setautopormotion(int autop)
 {
-	orderpromted = autop;
+	orderpromted = autop > 0 ? autop : 0;
 }
 
 void Order::SetVIP_WT(int vip)

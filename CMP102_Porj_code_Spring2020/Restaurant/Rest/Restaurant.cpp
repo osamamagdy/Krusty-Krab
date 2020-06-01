@@ -861,7 +861,7 @@ bool Restaurant::loadfile()
 	myfile >> AutoP >> VIP_WT;
 	myfile >> EventsNum;
 	//handling user errors in input file
-	if (NspeedMax<NspeedMin)
+	if (NspeedMax < NspeedMin)
 	{
 		temp = NspeedMax;
 		NspeedMax = NspeedMin;
@@ -903,17 +903,19 @@ bool Restaurant::loadfile()
 		GbreakMin = temp;
 	}
 
-	//creating Ncooks
-	Cook* newNcooks = new Cook[Ncook];
-
-	//creating Gcooks
-	Cook* newGcooks = new Cook[Gcook];
-	//creating Vcooks
-	Cook* newVcook = new Cook[Vcook];
-	//setting number of cooks for output file 
 	Cook::setVcount(Vcook);
 	Cook::setNcount(Ncook);
 	Cook::setGcount(Gcook);
+
+	//creating Ncooks
+	Cook* newNcooks = new Cook[Cook::GetNcount()];
+
+	//creating Gcooks
+	Cook* newGcooks = new Cook[Cook::GetGcount()];
+	//creating Vcooks
+	Cook* newVcook = new Cook[Cook::GetVcount()];
+	//setting number of cooks for output file 
+	
 	Cook::setAvailableVcount(Vcook);
 	Cook::setAvailableNcount(Ncook);
 	Cook::setAvailableGcount(Gcook);
