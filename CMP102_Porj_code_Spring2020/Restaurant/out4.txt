@@ -43,4 +43,4 @@ FT ID AT WT ST
 Orders: 41 [Norm:2, Veg:10, VIP:29]
 cooks: 9 [Norm:2, Veg:1, VIP:6, injured:9]
 Avg Wait = 30.1951,  Avg Serv = 6.31707
-Urgent orders : 13, Auto - promoted :12
+Urgent orders : 13, Auto - promoted :85%
