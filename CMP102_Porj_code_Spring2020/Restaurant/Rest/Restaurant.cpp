@@ -784,14 +784,6 @@ void Restaurant::checkunavailblecooks(int timestep)
 			prepare_Order.dequeue(the_order);
 			if (the_cook->GetStatus() != INJURD)
 			{
-				
-				
-
-				
-
-
-
-
 
 				int remaining_time_for_serving = the_cook->getTimesteptobeavailabale() - timestep;
 
