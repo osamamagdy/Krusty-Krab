@@ -1268,7 +1268,16 @@ void Restaurant::outputfile()
 	myfile << ", injured:" << Cook::get_num_of_injury() << "]" << "\n";
 	//getting avg of 
 	myfile << "Avg Wait = " << AvgWT << ",  Avg Serv = " << AvgST << "\n";
-	myfile << "Urgent orders : " << Order::get_Urgent_num() << ", Auto - promoted :" << (100*Order::Get_num_of_order_auto_P())/(Order::Get_num_of_order_auto_P()+ Order::getNordercount()) <<"%"<< "\n";
+	myfile << "Urgent orders : " << Order::get_Urgent_num();
+
+	if ((Order::Get_num_of_order_auto_P() + Order::getNordercount()) > 0)
+	{
+		myfile << ", Auto - promoted :" << (100 * Order::Get_num_of_order_auto_P()) / (Order::Get_num_of_order_auto_P() + Order::getNordercount()) << "%" << "\n";
+	}
+	else
+	{
+		myfile << ", Auto - promoted : Invalid " ;
+	}
 }
 void Restaurant::getavgSTandWT(Order** arr, int count, float& avgWT, float& avgST)
 {
